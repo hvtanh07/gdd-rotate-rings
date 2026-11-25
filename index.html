@@ -903,16 +903,17 @@ function view(l){
         `Chạm và di chuyển để xoay vòng. Vòng xoay quanh tâm, kéo theo các tay.`),
       t(`The ring can turn a full 360° when nothing holds it back.`,
         `Vòng xoay được trọn 360° nếu không có gì cản.`),
+      t(`A ring whose connector rests on another ring is locked: it cannot turn.`,
+        `Vòng có đầu nối đang tựa lên vòng khác thì bị khóa: không xoay được.`),
       t(`While turning, the ring shows a light inner line (selected state).`,`Khi đang xoay, vòng hiện một đường sáng bên trong (trạng thái được chọn).`),
       t(`Rings can overlap. No collision between pieces was seen.`,`Các vòng có thể chồng lên nhau. Không thấy va chạm giữa các vật.`)
     ]),[seen],demo('rotate'))+
     ent(nm('Connector','Đầu nối'),ul([
       t(`A connector is the round tip at the end of a ring’s arm.`,`Đầu nối là đầu tròn ở cuối tay của vòng.`),
       t(`It rests on another ring. That is what keeps the two rings together.`,`Nó tựa lên một vòng khác. Nhờ vậy hai vòng dính với nhau.`),
-      t(`The two rings come apart in one of two ways:`,`Hai vòng tách ra theo một trong hai cách:`)+ol([
-        t(`Turn the other ring until its gap reaches the connector. The connector slips out.`,`Xoay vòng kia tới khi chỗ hở chạm đầu nối. Đầu nối tuột ra.`),
-        t(`Turn the ring that owns the arm. The connector swings off the other ring.`,`Xoay vòng có tay. Đầu nối bị kéo ra khỏi vòng kia.`)
-      ])
+      t(`The ring that owns the arm is locked while its connector rests on another ring. It cannot turn.`,`Vòng có tay bị khóa khi đầu nối còn tựa lên vòng khác. Vòng đó không xoay được.`),
+      t(`To free it, turn the other ring until its gap reaches the connector. The connector slips out.`,`Muốn gỡ, xoay vòng kia tới khi chỗ hở chạm đầu nối. Đầu nối tuột ra.`),
+      t(`Once all its connectors are out, the ring can turn again.`,`Khi mọi đầu nối đã tuột ra, vòng xoay lại được.`)
     ]))+
     ent(t('Clear rule','Quy tắc dọn'),ul([
       t(`A piece with no links left shatters at once: shards of its color burst out and fade.`,`Vật không còn liên kết vỡ ngay: mảnh vụn cùng màu bung ra rồi mờ dần.`),
@@ -1136,7 +1137,7 @@ function view(l){
   B['booster-mechanics']=
     ent(N.bo1,ul([
       t(`Tap the button: every ring that can turn right now lights up.`,`Chạm nút: mọi vòng đang xoay được sẽ sáng lên.`),
-      t(`Rings that cannot turn stay dark: a ${P.el3} that is still locked.`,`Vòng không xoay được thì không sáng: ${P.el3} còn khóa.`),
+      t(`Rings that cannot turn stay dark: a ring whose connector rests on another ring, or a ${P.el3} that is still locked.`,`Vòng không xoay được thì không sáng: vòng có đầu nối đang tựa lên vòng khác, hoặc ${P.el3} còn khóa.`),
       t(`It removes nothing. The player still makes every move.`,`Không xóa gì. Người chơi vẫn tự xoay.`),
       t(`The light stays until the next move. TBD.`,`Đèn sáng tới lần xoay tiếp theo. Chưa chốt (TBD).`),
       t(`Animation: a yellow glow pulses around each movable ring.`,`Hiệu ứng: viền vàng nhấp nháy quanh mỗi vòng xoay được.`)
@@ -1526,6 +1527,11 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('Connector lock','Đầu nối khóa vòng'),ul([
+        t(`A ring whose connector rests on another ring is locked and cannot turn.`,`Vòng có đầu nối đang tựa lên vòng khác thì bị khóa, không xoay được.`),
+        t(`Removed the rule that turning the owner ring pulls the connector off. The only way to free it is to turn the other ring's gap to the connector.`,`Bỏ luật xoay vòng có tay để kéo đầu nối ra. Cách gỡ duy nhất là xoay chỗ hở của vòng kia tới đầu nối.`),
+        t(`${P.bo1} no longer lights rings locked this way.`,`${P.bo1} không làm sáng các vòng bị khóa kiểu này.`)
+      ]))+
       ent(t('Gold Pack prices','Giá Gói vàng'),ul([
         t(`New prices: 1,000 Gold $1.99, 5,000 $4.99, 10,000 $8.99, 25,000 $19.99, 50,000 $34.99, 100,000 $69.99.`,`Giá mới: 1.000 Vàng $1.99, 5.000 $4.99, 10.000 $8.99, 25.000 $19.99, 50.000 $34.99, 100.000 $69.99.`)
       ]))+
