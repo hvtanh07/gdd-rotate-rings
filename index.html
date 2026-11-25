@@ -886,10 +886,6 @@ function view(l){
       t(`While turning, the ring shows a light inner line (selected state).`,`Khi đang xoay, vòng hiện một đường sáng bên trong (trạng thái được chọn).`),
       t(`Rings can overlap. No collision between pieces was seen.`,`Các vòng có thể chồng lên nhau. Không thấy va chạm giữa các vật.`)
     ]),[seen],demo('rotate'))+
-    ent(nm('Closed ring','Vòng kín'),ul([
-      t(`A full circle with no gap, often with stub arms. First seen at level 5.`,`Vòng tròn kín, không có chỗ hở, thường có tay ngắn. Thấy lần đầu ở màn 5.`),
-      t(`Nothing can slip off it by turning it. It clears only once all its links are gone.`,`Không vật nào tuột ra khỏi nó khi xoay. Nó chỉ được dọn khi hết liên kết.`)+' '+inf
-    ]),unlock(5))+
     ent(nm('Connector','Đầu nối'),ul([
       t(`The plug at the end of an arm. It sits on the arc of another ring and holds the two together.`,`Đầu tròn ở cuối tay. Nó nằm trên cung của một vòng khác và giữ hai vòng với nhau.`),
       t(`The link breaks when the other ring turns so that its gap passes the plug.`,`Liên kết bị tách khi vòng kia xoay để chỗ hở đi qua đầu nối.`),
@@ -1127,7 +1123,7 @@ function view(l){
       t(`Tap the button, then tap a ring: the saw cuts that ring out of the level.`,`Chạm nút, rồi chạm vào một vòng: cưa cắt vòng đó ra khỏi màn.`),
       t(`Every link the ring held is released at once. Rings left with no links shatter too, so one cut can clear a chain.`,`Mọi liên kết vòng đó đang giữ được nhả ra cùng lúc. Vòng nào hết liên kết cũng vỡ theo, nên một lần cắt có thể dọn cả chuỗi.`),
       t(`The strongest booster: ${P.bo2} clears one piece, ${P.bo3} also frees everything hooked to it.`,`Booster mạnh nhất: ${P.bo2} dọn một vật, ${P.bo3} còn gỡ mọi thứ móc vào vật đó.`),
-      t(`What it can pick: rings and closed rings. ${P.el1} and ${P.el2}: TBD.`,`Chọn được: vòng và vòng kín. ${P.el1} và ${P.el2}: chưa chốt (TBD).`),
+      t(`What it can pick: any ring. ${P.el1} and ${P.el2}: TBD.`,`Chọn được: mọi vòng. ${P.el1} và ${P.el2}: chưa chốt (TBD).`),
       t(`Animation: a spinning blade drops on the ring and cuts it, then the freed rings shatter one after another.`,`Hiệu ứng: lưỡi cưa quay rơi xuống vòng và cắt nó, sau đó các vòng được gỡ lần lượt vỡ.`),
       t(`Unlock level: TBD (proposed 12–15). Not seen in the video.`,`Màn mở khóa: chưa chốt (đề xuất màn 12–15). Không có trong video.`)
     ]),unlockB('TBD'),demo('saw'));
