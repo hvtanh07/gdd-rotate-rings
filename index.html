@@ -600,7 +600,15 @@ function praiseTracks(cls,t){return [[`.${cls}`,'opacity',[[0,0],[t,0],[t+.12,1]
 /* booster button at the bottom of a demo */
 function sawBlade(cx,cy,r){let d='';const n=12;for(let i=0;i<n;i++){const a=i*360/n,[x0,y0]=pt(cx,cy,r,a),[x1,y1]=pt(cx,cy,r+r*.32,a+12),[x2,y2]=pt(cx,cy,r,a+30);d+=(i?'L':'M')+x0+' '+y0+'L'+x1+' '+y1+'L'+x2+' '+y2;}
   return `<path d="${d}Z" fill="#B8C0CC" stroke="#7D8696" stroke-width="1"/><circle cx="${cx}" cy="${cy}" r="${(r*.35).toFixed(1)}" fill="#D9363E"/>`;}
+/* hand saw (red handle, grey toothed blade). Teeth edge runs along y=0, blade tip to the left, handle to the right */
+function handSaw(){let tt='M20 0';for(let x=20;x>-44;x-=6)tt+=`L${x-3} 4L${x-6} 0`;
+  return `<path d="M-44 0L-44 -8L20 -20L20 0Z" fill="#C3C8D1" stroke="#8C93A1" stroke-width="1"/><path d="${tt}" fill="#C3C8D1" stroke="#8C93A1" stroke-width="1" stroke-linejoin="round"/>`+
+    `<path d="M-40 -6L16 -16" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>`+
+    `<path d="${rr(16,-26,30,32,8)}${rr(25,-17,13,15,4)}" fill="#E53935" fill-rule="evenodd"/>`+
+    `<circle cx="21" cy="-20" r="1.8" fill="#5A1F1F"/><circle cx="21" cy="-10" r="1.8" fill="#5A1F1F"/><circle cx="21" cy="0" r="1.8" fill="#5A1F1F"/>`;}
 function boBtn(x,y,kind){
+  if(kind==='hint')return `<rect x="${x}" y="${y}" width="26" height="26" rx="7" fill="#FFF6E6" stroke="#E0A458" stroke-width="2"/><circle cx="${x+13}" cy="${y+11}" r="6.5" fill="#F4BE0B"/><rect x="${x+9.5}" y="${y+16}" width="7" height="5" rx="1.5" fill="#7D8696"/>`;
+  if(kind==='hsaw')return `<rect x="${x}" y="${y}" width="26" height="26" rx="7" fill="#FFF6E6" stroke="#E0A458" stroke-width="2"/><g transform="translate(${x+11} ${y+15}) rotate(35) scale(.3)">${handSaw()}</g>`;
   if(kind==='saw')return `<rect x="${x}" y="${y}" width="26" height="26" rx="7" fill="#FFF6E6" stroke="#E0A458" stroke-width="2"/>${sawBlade(x+13,y+13,7.5)}`;
   const icon=kind==='fw'
     ?`<path d="M${x+6} ${y+20}L${x+20} ${y+6}" stroke="#7C4DDB" stroke-width="6" stroke-linecap="round"/><path d="M${x+16} ${y+4}L${x+23} ${y+3}L${x+22} ${y+10}Z" fill="#D9363E"/><path d="M${x+5} ${y+21}l-3 3" stroke="#F4BE0B" stroke-width="3" stroke-linecap="round"/>`
@@ -676,44 +684,46 @@ const DEMOS={
       ...tapTracks(.6),spin('.gA',.9,2.0,90),spin('.gB',.9,2.0,-90),
       fadeOut('.pR',2.15),...shardTracks('shP',2.15),...praiseTracks('pr',2.2)
     ]},
-  /* booster: a firework flies to one random piece and clears it */
-  firework:{D:5.2,
-    svg:()=>`${ringP(56,62,26,7,200,60)}${armP(82,62,104,62,7)}`+
-      `<g class="tg">${ringP(130,62,26,1,320,60)}${armP(130,88,100,104,1)}</g>`+
-      `${ringP(100,130,26,3,90,60)}`+boBtn(87,164,'fw')+tap(100,177)+
-      `<circle class="spark" cx="100" cy="164" r="5" fill="#F4BE0B" style="opacity:0"/>`+shards(130,62,1,'shT',12,32),
+  /* booster: Hint lights up every ring that can turn right now; locked or held rings stay dark */
+  hint:{D:5.4,
+    svg:()=>`${ringP(56,66,24,7,200,60)}${armP(80,66,116,66,7)}`+
+      `${ringP(140,66,24,2,270,64)}<g><path d="M134 64v-5a6 6 0 0 1 12 0v5" fill="none" stroke="#566079" stroke-width="3"/><rect x="130" y="63" width="20" height="15" rx="3.5" fill="#566079"/><circle cx="140" cy="70" r="2.2" fill="#fff"/></g>`+
+      `${ringP(100,128,24,3,90,60)}${armP(100,104,100,90,3)}`+
+      `<circle class="hA" cx="56" cy="66" r="33" fill="none" stroke="#F4BE0B" stroke-width="4" style="opacity:0"/>`+
+      `<circle class="hC" cx="100" cy="128" r="33" fill="none" stroke="#F4BE0B" stroke-width="4" style="opacity:0"/>`+
+      boBtn(87,164,'hint')+tap(100,177),
     tracks:()=>[
       ...tapTracks(.6),
-      ['.spark','opacity',[[0,0],[1.0,0],[1.05,1],[1.75,1],[1.8,0]]],
-      ['.spark','transform',[[1.0,'translate(0px,0px)'],[1.75,'translate(30px,-102px)']]],
-      fadeOut('.tg',1.8),...shardTracks('shT',1.8)
+      ...['.hA','.hC'].map(c=>[c,'opacity',[[0,0],[1.0,0],[1.2,1],[1.7,.35],[2.2,1],[2.7,.35],[3.2,1],[4.4,1],[4.7,0]]])
     ]},
-  /* booster: tap the hammer, then tap any piece: the hammer smashes it */
-  hammer:{D:5.4,
-    svg:()=>`${ringP(56,62,26,7,200,60)}${armP(82,62,104,62,7)}`+
+  /* booster: tap the saw, then tap a connector arm: a hand saw cuts it, the link is gone and the ring left with no links shatters */
+  saw:{D:6,
+    svg:()=>`<g class="sA">${ringP(40,80,22,7,180,60)}</g>`+
+      `<g class="cut">${armP(62,80,118,80,7)}</g>`+
+      `${ringP(140,80,22,1,300,60)}${ringP(140,140,22,3,90,60)}${armP(140,118,140,102,3)}`+
+      boBtn(87,164,'hsaw')+tap(100,177)+`<circle class="tap2 tap" cx="90" cy="80" r="13" style="opacity:0"/>`+
+      `<g transform="translate(90 80) rotate(-60) scale(.8)"><g class="hs" style="opacity:0">${handSaw()}</g></g>`+
+      shards(90,80,7,'shC',8,16)+shards(40,80,7,'shA')+praise(100,30,'Great!','pr'),
+    tracks:()=>[
+      ...tapTracks(.5),...tapTracks(1.3,'.tap2'),
+      ['.hs','opacity',[[0,0],[1.5,0],[1.65,1],[3.1,1],[3.3,0]]],
+      ['.hs','transform',[[1.5,'translate(0px,-14px)'],[1.7,'translate(0px,0px)'],[1.95,'translate(-12px,0px)'],[2.2,'translate(8px,0px)'],[2.45,'translate(-12px,0px)'],[2.7,'translate(8px,0px)'],[2.95,'translate(-12px,0px)'],[3.3,'translate(0px,-14px)']]],
+      fadeOut('.cut',3.0),...shardTracks('shC',3.0),
+      fadeOut('.sA',3.5),...shardTracks('shA',3.5),...praiseTracks('pr',3.55)
+    ]},
+  /* booster: tap Remove, then tap any ring: a hammer smashes it and its links are gone */
+  remove:{D:5.6,
+    svg:()=>`<g class="sL">${ringP(56,62,26,7,200,60)}${armP(82,62,104,62,7)}</g>`+
       `<g class="tg">${ringP(130,62,26,1,320,60)}${armP(130,88,100,104,1)}</g>`+
-      `${ringP(100,130,26,3,90,60)}`+boBtn(87,164,'hm')+tap(100,177)+`<circle class="tap2 tap" cx="130" cy="62" r="15" style="opacity:0"/>`+
+      `<g class="sB">${ringP(100,130,26,3,90,60)}</g>`+boBtn(87,164,'hm')+tap(100,177)+`<circle class="tap2 tap" cx="130" cy="62" r="15" style="opacity:0"/>`+
       `<g class="hm" style="opacity:0"><path d="M150 52L170 30" stroke="#B9803F" stroke-width="6" stroke-linecap="round"/><rect x="139" y="34" width="26" height="16" rx="4" fill="#7C4DDB"/></g>`+
-      shards(130,62,1,'shT',12,32),
+      shards(130,62,1,'shT',12,32)+shards(56,62,7,'shL',9,26)+shards(100,130,3,'shB',9,26)+praise(100,30,'Amazing!','pr'),
     tracks:()=>[
       ...tapTracks(.5),...tapTracks(1.4,'.tap2'),
       ['.hm','opacity',[[0,0],[1.6,0],[1.7,1],[2.35,1],[2.5,0]]],
       ['.hm','transform',[[1.7,'rotate(25deg)'],[2.05,'rotate(25deg)'],[2.2,'rotate(-35deg)']]],
-      fadeOut('.tg',2.2),...shardTracks('shT',2.2)
-    ]},
-  /* booster: tap the saw, then tap a ring: the saw cuts it out and every link it held is released */
-  saw:{D:6,
-    svg:()=>`<g class="sL">${ringP(40,96,22,7,180,60)}${armP(62,96,74,96,7)}</g>`+
-      `<g class="sR">${ringP(160,96,22,6,0,60)}${armP(138,96,126,96,6)}</g>`+
-      `<g class="tg">${ringP(100,96,26,1,90,56)}</g>`+boBtn(87,164,'saw')+tap(100,177)+`<circle class="tap2 tap" cx="100" cy="96" r="15" style="opacity:0"/>`+
-      `<g class="sw" style="opacity:0">${bb(100,96,24)}${sawBlade(100,96,17)}</g>`+
-      shards(100,96,1,'shT',12,34)+shards(40,96,7,'shL',9,24)+shards(160,96,6,'shR',9,24)+praise(100,40,'Amazing!','pr'),
-    tracks:()=>[
-      ...tapTracks(.5),...tapTracks(1.3,'.tap2'),
-      ['.sw','opacity',[[0,0],[1.5,0],[1.6,1],[2.6,1],[2.75,0]]],
-      ['.sw','transform',[[1.5,'rotate(0deg) scale(.6)'],[1.75,'rotate(160deg) scale(1)'],[2.75,'rotate(900deg) scale(1)']]],
-      fadeOut('.tg',2.5),...shardTracks('shT',2.5),
-      fadeOut('.sL',3.0),fadeOut('.sR',3.0),...shardTracks('shL',3.0),...shardTracks('shR',3.05),...praiseTracks('pr',3.05)
+      fadeOut('.tg',2.2),...shardTracks('shT',2.2),
+      fadeOut('.sL',2.8),fadeOut('.sB',2.8),...shardTracks('shL',2.8),...shardTracks('shB',2.85),...praiseTracks('pr',2.85)
     ]}
 };
 /* hero: a level-6-like board. The top-right ring is tapped, turns until its gap frees the connector, shatters, then comes back (loop).
@@ -836,11 +846,11 @@ function view(l){
   /* names reused across sections */
   const N={
     el1:nm('Link Bar','Thanh nối'),el2:nm('Pin','Chốt treo'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
-    bo1:nm('Firework','Pháo hoa'),bo2:nm('Hammer','Búa'),bo3:nm('Saw','Cưa')
+    bo1:nm('Hint','Gợi ý'),bo2:nm('Saw','Cưa'),bo3:nm('Remove','Xóa vòng')
   };
   const P={ /* plain names for running text and tables */
     el1:t('Link Bar','Thanh nối'),el2:t('Pin','Chốt treo'),el3:t('Locked Ring','Vòng khóa'),el4:t('Gear Ring','Bánh răng'),
-    bo1:t('Firework','Pháo hoa'),bo2:t('Hammer','Búa'),bo3:t('Saw','Cưa')
+    bo1:t('Hint','Gợi ý'),bo2:t('Saw','Cưa'),bo3:t('Remove','Xóa vòng')
   };
   const withEl=t('With elements','Khi gặp yếu tố đặc biệt');
   /* rules read from the recording are stated as seen; guesses carry this tag */
@@ -854,9 +864,9 @@ function view(l){
     pin:t('Turn the ring until its gap reaches the clamp. The pin drops and shatters, then the ring.','Xoay vòng tới khi chỗ hở gặp kẹp. Chốt rơi ra và vỡ, sau đó tới vòng.'),
     lockedRing:t('A tap on the locked ring only shakes it. The yellow ring turns, shatters, and its key flies to the lock. Now the blue ring turns.','Chạm vòng khóa thì vòng chỉ rung. Vòng vàng xoay rồi vỡ, chìa khóa bay tới ổ khóa. Lúc này vòng xanh mới xoay được.'),
     gearRing:t('Tap the orange gear: it turns one way and the green gear turns the other way. The green gap frees the purple ring.','Chạm bánh răng cam: nó xoay một chiều, bánh răng xanh xoay ngược lại. Chỗ hở của vòng xanh gỡ được vòng tím.'),
-    firework:t('Tap the firework. It flies to one random piece and clears it.','Chạm pháo hoa. Pháo bay tới một vật ngẫu nhiên và dọn nó.'),
-    hammer:t('Tap the hammer, then tap any piece. The hammer smashes it.','Chạm búa, rồi chạm vào vật bất kỳ. Búa đập vỡ vật đó.'),
-    saw:t('Tap the saw, then tap a ring. The saw cuts it out, its links are released and the freed rings shatter too.','Chạm cưa, rồi chạm vào một vòng. Cưa cắt vòng đó ra, các liên kết được nhả và những vòng được gỡ cũng vỡ theo.')
+    hint:t('Tap Hint. The rings that can turn now light up. The locked ring stays dark.','Chạm Gợi ý. Các vòng đang xoay được sáng lên. Vòng khóa không sáng.'),
+    saw:t('Tap the saw, then tap a connector arm. The saw cuts it. The orange ring has no links left and shatters.','Chạm cưa, rồi chạm vào một tay nối. Cưa cắt tay nối đó. Vòng cam hết liên kết nên vỡ.'),
+    remove:t('Tap Remove, then tap a ring. A hammer smashes it. The rings it held have no links left and shatter too.','Chạm Xóa vòng, rồi chạm vào một vòng. Búa đập vỡ vòng đó. Các vòng nó đang giữ hết liên kết nên cũng vỡ.')
   };
   /* demo(key) shows DEMOS[key] with its DCAP caption; pass a caption as the second argument to override it */
   const demo=(k,c)=>{const cp=c||DCAP[k]||'';return DEMOS[k]?`<figure class="demo" data-demo="${k}"><div class="demo-box"><svg viewBox="0 0 200 196" role="img" aria-label="${esc(cp.replace(/<[^>]+>/g,''))}"><g class="scene">${DEMOS[k].svg()}</g></svg>`+
@@ -1060,7 +1070,7 @@ function view(l){
       panel(t('On revive','Khi hồi sinh'),ul([
         t(`Continue from where it stopped. No restart, no life lost.`,`Chơi tiếp từ chỗ dừng. Không chơi lại, không mất tim.`),
         t(`A free ${P.bo3} is used at once.`,`Dùng ngay 1 ${P.bo3} miễn phí.`)+' '+
-          t(`It cuts the ring that holds the most links. TBD.`,`Cưa cắt vòng đang giữ nhiều liên kết nhất. Chưa chốt (TBD).`),
+          t(`It removes the ring that holds the most links. TBD.`,`Nó xóa vòng đang giữ nhiều liên kết nhất. Chưa chốt (TBD).`),
         t(`It is not taken from the inventory, and works even if ${P.bo3} is not owned or unlocked.`,`Không trừ vào kho, và vẫn dùng được dù chưa có hay chưa mở ${P.bo3}.`),
         t(`Revive count and price reset on a new attempt.`,`Số lần và giá hồi sinh tính lại khi bắt đầu lượt mới.`),
         t(`Ad or purchase fails: back to the popup. Input locked while the booster plays.`,`Quảng cáo hoặc giao dịch lỗi: quay lại popup. Khóa thao tác khi công cụ đang chạy.`)
@@ -1103,7 +1113,7 @@ function view(l){
       t(`When the piece holding the key shatters, the key flies to the lock and the lock opens. From then on it is a normal ring.`,`Khi vật giữ chìa khóa vỡ, chìa khóa bay tới ổ khóa và ổ khóa mở. Từ đó nó là vòng bình thường.`),
       t(`While locked, it still clears if its neighbors release all its links.`,`Khi còn khóa, vòng vẫn được dọn nếu các vòng bên cạnh nhả hết liên kết của nó.`),
       t(`The player must plan the order: free the key holder first.`,`Người chơi phải tính thứ tự: gỡ vật giữ chìa khóa trước.`),
-      t(`Boosters: ${P.bo1} and ${P.bo2} on the key holder also release the key. ${P.bo2} and ${P.bo3} on the locked ring clear it, lock and all.`,`Booster: ${P.bo1} và ${P.bo2} lên vật giữ chìa cũng nhả chìa. ${P.bo2} và ${P.bo3} lên vòng khóa dọn luôn cả vòng lẫn ổ khóa.`),
+      t(`Boosters: ${P.bo1} does not light a locked ring. ${P.bo3} on the key holder also releases the key. ${P.bo3} on the locked ring clears it, lock and all.`,`Booster: ${P.bo1} không làm sáng vòng còn khóa. ${P.bo3} lên vật giữ chìa cũng nhả chìa. ${P.bo3} lên vòng khóa dọn luôn cả vòng lẫn ổ khóa.`),
       fsLine(`the key holder can only be freed by turning the locked ring.`,`vật giữ chìa khóa chỉ gỡ được bằng cách xoay vòng khóa.`)
     ]),unlock('TBD'),demo('lockedRing'))+
     ent(N.el4,ul([
@@ -1123,24 +1133,27 @@ function view(l){
   /* PER GAME: one ent per booster: ent(N.key, ul([...]), unlockB(level), demo('key')) */
   B['booster-mechanics']=
     ent(N.bo1,ul([
-      t(`Tap the button: one random piece on the board is cleared. The player does not pick it.`,`Chạm nút: một vật ngẫu nhiên trên màn được dọn. Người chơi không chọn vật.`),
-      t(`Which pieces it can pick is TBD (rings only, or ${P.el1} and ${P.el2} too).`,`Vật nào có thể bị chọn chưa chốt (TBD): chỉ vòng, hay cả ${P.el1} và ${P.el2}.`),
-      t(`Animation: the rocket flies to the target and bursts, the target shatters.`,`Hiệu ứng: pháo bay tới mục tiêu rồi nổ, mục tiêu vỡ vụn.`)+' '+inf,
-      t(`Clearing the target can free its neighbors, as with a normal clear.`,`Dọn mục tiêu có thể gỡ cả các vòng bên cạnh, như khi dọn bình thường.`)+' '+inf
-    ]),unlockB(4),demo('firework'))+
+      t(`Tap the button: every ring that can turn right now lights up.`,`Chạm nút: mọi vòng đang xoay được sẽ sáng lên.`),
+      t(`Rings that cannot turn stay dark: a ${P.el3} that is still locked, or a ring held in place by a ${P.el1}.`,`Vòng không xoay được thì không sáng: ${P.el3} còn khóa, hoặc vòng đang bị ${P.el1} giữ.`),
+      t(`It removes nothing. The player still makes every move.`,`Không xóa gì. Người chơi vẫn tự xoay.`),
+      t(`The light stays until the next move. TBD.`,`Đèn sáng tới lần xoay tiếp theo. Chưa chốt (TBD).`),
+      t(`Animation: a yellow glow pulses around each movable ring.`,`Hiệu ứng: viền vàng nhấp nháy quanh mỗi vòng xoay được.`)
+    ]),unlockB('TBD'),demo('hint'))+
     ent(N.bo2,ul([
-      t(`Tap the button, then tap any piece: the hammer smashes it at once.`,`Chạm nút, rồi chạm vào vật bất kỳ: búa đập vỡ vật đó ngay.`),
-      t(`Any piece can be picked, by the in-game text. Tapping empty space: TBD.`,`Chọn được mọi vật, theo chữ trong game. Chạm vào chỗ trống: chưa chốt (TBD).`),
-      t(`Animation: the hammer swings down on the piece, the piece shatters.`,`Hiệu ứng: búa vung xuống vật, vật vỡ vụn.`)+' '+inf
-    ]),unlockB(8),demo('hammer'))+
+      t(`Tap the button, then tap a connector (an arm and its plug): the saw cuts it.`,`Chạm nút, rồi chạm vào một đầu nối (tay nối và đầu tròn): cưa cắt nó.`),
+      t(`That link is gone. A piece left with no links shatters, as with a normal clear.`,`Liên kết đó mất. Vật nào hết liên kết thì vỡ, như khi dọn bình thường.`),
+      t(`Only the link is removed. Both rings stay if they still have other links.`,`Chỉ mất liên kết. Hai vòng vẫn còn nếu còn liên kết khác.`),
+      t(`Can it cut a ${P.el1} or a ${P.el2}: TBD. Tapping a ring or empty space: TBD.`,`Cắt được ${P.el1} hay ${P.el2} không: chưa chốt (TBD). Chạm vào vòng hoặc chỗ trống: chưa chốt (TBD).`),
+      t(`Animation: a hand saw (red handle, grey toothed blade) saws back and forth on the arm, then the arm breaks into shards.`,`Hiệu ứng: cưa tay (cán đỏ, lưỡi răng cưa xám) kéo qua lại trên tay nối, rồi tay nối vỡ thành mảnh.`)
+    ]),unlockB('TBD'),demo('saw'))+
     ent(N.bo3,ul([
-      t(`Tap the button, then tap a ring: the saw cuts that ring out of the level.`,`Chạm nút, rồi chạm vào một vòng: cưa cắt vòng đó ra khỏi màn.`),
-      t(`Every link the ring held is released at once. Rings left with no links shatter too, so one cut can clear a chain.`,`Mọi liên kết vòng đó đang giữ được nhả ra cùng lúc. Vòng nào hết liên kết cũng vỡ theo, nên một lần cắt có thể dọn cả chuỗi.`),
-      t(`The strongest booster: ${P.bo2} clears one piece, ${P.bo3} also frees everything hooked to it.`,`Booster mạnh nhất: ${P.bo2} dọn một vật, ${P.bo3} còn gỡ mọi thứ móc vào vật đó.`),
-      t(`What it can pick: any ring. ${P.el1} and ${P.el2}: TBD.`,`Chọn được: mọi vòng. ${P.el1} và ${P.el2}: chưa chốt (TBD).`),
-      t(`Animation: a spinning blade drops on the ring and cuts it, then the freed rings shatter one after another.`,`Hiệu ứng: lưỡi cưa quay rơi xuống vòng và cắt nó, sau đó các vòng được gỡ lần lượt vỡ.`),
-      t(`Unlock level: TBD (proposed 12–15). Not seen in the video.`,`Màn mở khóa: chưa chốt (đề xuất màn 12–15). Không có trong video.`)
-    ]),unlockB('TBD'),demo('saw'));
+      t(`Tap the button, then tap any ring: that ring is removed from the level.`,`Chạm nút, rồi chạm vào vòng bất kỳ: vòng đó bị xóa khỏi màn.`),
+      t(`Every link it had goes with it. Rings left with no links shatter too, so one use can clear a chain.`,`Mọi liên kết của nó mất theo. Vòng nào hết liên kết cũng vỡ, nên một lần dùng có thể dọn cả chuỗi.`),
+      t(`The strongest booster: ${P.bo2} removes one link, ${P.bo3} removes a whole ring.`,`Booster mạnh nhất: ${P.bo2} xóa một liên kết, ${P.bo3} xóa cả một vòng.`),
+      t(`Works on a ${P.el3} that is still locked. ${P.el1} and ${P.el2}: TBD.`,`Dùng được lên ${P.el3} còn khóa. ${P.el1} và ${P.el2}: chưa chốt (TBD).`),
+      t(`Animation: a hammer swings down on the ring, the ring shatters.`,`Hiệu ứng: búa vung xuống vòng, vòng vỡ vụn.`)
+    ]),unlockB('TBD'),demo('remove'))+
+    `<p class="note">${t(`Unlock levels are TBD. In the video, booster slots unlock at levels 4 and 8.`,`Màn mở khóa chưa chốt (TBD). Trong video, ô booster mở ở màn 4 và màn 8.`)}</p>`;
 
   /* ===== 2. FTUE & tutorial ===== */
   B['ftue--tutorial']=`<p class="sec-intro">${t(
@@ -1192,18 +1205,18 @@ function view(l){
   B['booster-tutorial']=table(t('Booster tutorial','Hướng dẫn công cụ hỗ trợ'),
     [t('Booster','Công cụ'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn'),t('Free boosters','Số lượt tặng')],
     [
-      [N.bo1,popup('Booster unlocked!<br>Burn a firework to clear a random target!','Đã mở khóa trợ lực!<br>Đốt pháo hoa để xóa ngẫu nhiên một mục tiêu!'),lvl(4),lvl(3)],
-      [N.bo2,popup('Hammer<br>Tap any object to smash it.','Búa<br>Chạm vào bất kỳ vật nào để đập vỡ nó'),lvl(8),lvl(3)],
-      [N.bo3,popup('Saw<br>Tap a ring to cut it out!','Cưa<br>Chạm vào một vòng để cắt nó ra!'),lvl('TBD'),lvl(3)]
+      [N.bo1,popup('Hint<br>Tap to see which rings can turn!','Gợi ý<br>Chạm để xem vòng nào xoay được!'),lvl('TBD'),lvl(3)],
+      [N.bo2,popup('Saw<br>Tap a connector to cut it!','Cưa<br>Chạm vào một đầu nối để cắt nó!'),lvl('TBD'),lvl(3)],
+      [N.bo3,popup('Remove<br>Tap any ring to remove it!','Xóa vòng<br>Chạm vào vòng bất kỳ để xóa nó!'),lvl('TBD'),lvl(3)]
     ])+
-    `<p class="note">${t(`Flow seen at levels 4 and 8: the screen dims, the booster icon glows in the middle with “Đã mở khóa trợ lực!”, “Chạm để tiếp tục” (tap to continue). Then a tooltip names the booster and a green “Sử dụng” (Use) button appears. The button is tagged “Miễn phí” (free) for this first use. The badge shows 3 afterwards.`,
-      `Diễn biến ở màn 4 và 8: màn hình tối lại, biểu tượng booster sáng ở giữa kèm “Đã mở khóa trợ lực!”, “Chạm để tiếp tục”. Sau đó tooltip ghi tên booster và hiện nút xanh “Sử dụng”. Nút có nhãn “Miễn phí” cho lần dùng đầu. Sau đó chấm đỏ ghi 3.`)}</p>`;
+    `<p class="note">${t(`Flow seen at levels 4 and 8 (with the old boosters), kept for all three: the screen dims, the booster icon glows in the middle with “Đã mở khóa trợ lực!”, “Chạm để tiếp tục” (tap to continue). Then a tooltip names the booster and a green “Sử dụng” (Use) button appears. The button is tagged “Miễn phí” (free) for this first use. The badge shows 3 afterwards.`,
+      `Diễn biến thấy ở màn 4 và 8 (với booster cũ), dùng cho cả ba: màn hình tối lại, biểu tượng booster sáng ở giữa kèm “Đã mở khóa trợ lực!”, “Chạm để tiếp tục”. Sau đó tooltip ghi tên booster và hiện nút xanh “Sử dụng”. Nút có nhãn “Miễn phí” cho lần dùng đầu. Sau đó chấm đỏ ghi 3.`)}</p>`;
 
   /* PER GAME: every element and booster with its unlock level, sorted by level */
   const stops=[
     [1,t('First tutorial','Hướng dẫn đầu tiên'),'ftue','ftue-steps','FTUE'],
-    [4,P.bo1,'boost','booster-mechanics'],[7,P.el1,'elem','elements-mechanics'],
-    [8,P.bo2,'boost','booster-mechanics'],[10,P.el2,'elem','elements-mechanics'],
+    [7,P.el1,'elem','elements-mechanics'],[10,P.el2,'elem','elements-mechanics'],
+    ['TBD',P.bo1,'boost','booster-mechanics'],['TBD',P.bo2,'boost','booster-mechanics'],
     ['TBD',P.bo3,'boost','booster-mechanics'],['TBD',P.el3,'elem','elements-mechanics'],
     ['TBD',P.el4,'elem','elements-mechanics']
   ];
@@ -1238,9 +1251,9 @@ function view(l){
     ent(N.el4,params([[look,t('A ring with a toothed outer rim in the same color.','Vòng có vành răng ở mép ngoài, cùng màu vòng.')],[an,t('Meshed gears turn together in opposite directions, teeth rolling against each other.','Các bánh răng ăn khớp cùng xoay ngược chiều, răng lăn vào nhau.')]]));
 
   B['booster-object-concept']=
-    ent(N.bo1,params([[look,t('Purple and white striped rocket.','Quả pháo sọc tím trắng.')],[an,t('Unlock: glows in the middle of the dimmed screen with sparkles. Use: TBD, probably the rocket flies to the target and bursts.','Mở khóa: sáng ở giữa màn hình tối, có lấp lánh. Khi dùng: chưa chốt (TBD), có thể pháo bay tới mục tiêu rồi nổ.')]]))+
-    ent(N.bo2,params([[look,t('Hammer with a purple head and a star.','Búa đầu tím có ngôi sao.')],[an,t('Unlock: three hammers fly in and land on the button. Use: TBD, probably the hammer swings down and the piece shatters.','Mở khóa: ba chiếc búa bay vào nút. Khi dùng: chưa chốt (TBD), có thể búa vung xuống và vật vỡ.')]]))+
-    ent(N.bo3,params([[look,t('Round saw blade, silver teeth, red hub.','Lưỡi cưa tròn, răng bạc, tâm đỏ.')],[an,t('The blade spins down onto the ring and cuts it, sparks fly, then the freed rings shatter in a chain.','Lưỡi cưa quay xuống vòng và cắt nó, tóe tia lửa, sau đó các vòng được gỡ vỡ theo chuỗi.')]]));
+    ent(N.bo1,params([[look,t('A yellow light bulb.','Bóng đèn vàng.')],[an,t('A yellow glow pulses around every ring that can turn, until the next move.','Viền vàng nhấp nháy quanh mọi vòng xoay được, tới lần xoay tiếp theo.')]]))+
+    ent(N.bo2,params([[look,t('Hand saw: red handle with a grip hole, grey blade with teeth.','Cưa tay: cán đỏ có lỗ cầm, lưỡi xám có răng cưa.')],[an,t('The saw appears on the chosen arm, saws back and forth, then the arm breaks into shards.','Cưa hiện trên tay nối được chọn, kéo qua lại, rồi tay nối vỡ thành mảnh.')]]))+
+    ent(N.bo3,params([[look,t('Hammer with a purple head.','Búa đầu tím.')],[an,t('The hammer swings down on the ring, the ring shatters, then rings with no links left shatter in a chain.','Búa vung xuống vòng, vòng vỡ vụn, sau đó các vòng hết liên kết vỡ theo chuỗi.')]]));
 
   /* ===== 4. SFX & haptics ===== */
   /* FIXED: the UI rows are the same in every project. PER GAME: replace the core, element and booster rows.
@@ -1263,9 +1276,9 @@ function view(l){
     ['Lock Shake','el',t(`The player taps a ${P.el3} that is still locked`,`Người chơi chạm ${P.el3} khi còn khóa`),1],
     ['Lock Open','el',t(`A key reaches its lock and the ${P.el3} opens`,`Chìa khóa tới ổ khóa và ${P.el3} mở`),2],
     ['Gear Turn','el',t(`Meshed ${P.el4}s turn together`,`Các ${P.el4} ăn khớp cùng xoay`),1],
-    ['Firework','bo',t(`The player uses ${P.bo1}`,`Người chơi dùng ${P.bo1}`),2],
-    ['Hammer','bo',t(`The player uses ${P.bo2}`,`Người chơi dùng ${P.bo2}`),3],
-    ['Saw','bo',t(`The player uses ${P.bo3}`,`Người chơi dùng ${P.bo3}`),3]
+    ['Hint','bo',t(`The player uses ${P.bo1} and rings light up`,`Người chơi dùng ${P.bo1}, các vòng sáng lên`),1],
+    ['Saw','bo',t(`The player uses ${P.bo2} on a connector`,`Người chơi dùng ${P.bo2} lên một đầu nối`),2],
+    ['Remove','bo',t(`The player uses ${P.bo3}: the hammer hits the ring`,`Người chơi dùng ${P.bo3}: búa đập vào vòng`),3]
   ];
   B['sfx--haptics']=table(t('SFX and haptics','Âm thanh và rung'),
     [t('Name','Tên'),t('Category','Nhóm'),t('Plays when','Phát khi'),t('Haptic','Rung')],
@@ -1309,9 +1322,9 @@ function view(l){
       ['lives_refill_ad_amount',t('Refill with ads — REWARD: lives given','Nạp bằng quảng cáo — THƯỞNG: số mạng nhận'),'1',rew(lives)]
     ])+
     rc(t('Boosters — cost and reward','Công cụ hỗ trợ — giá và thưởng'),[
-      ...boost('weak','Weak (Firework)','yếu (Pháo hoa)','900'),
-      ...boost('medium','Medium (Hammer)','vừa (Búa)','1,200'),
-      ...boost('strong','Strong (Saw)','mạnh (Cưa)','1,500')
+      ...boost('weak','Weak (Hint)','yếu (Gợi ý)','900'),
+      ...boost('medium','Medium (Saw)','vừa (Cưa)','1,200'),
+      ...boost('strong','Strong (Remove)','mạnh (Xóa vòng)','1,500')
     ])+
     rc(t('Unlock popups — offer unlock level','Popup mở khóa — màn mở ưu đãi'),[
       ['starter_pack_unlock_level',t('Starter Pack (IAP) — level from which the offer popup can show','Gói Khởi đầu (IAP) — màn bắt đầu có thể hiện popup ưu đãi'),'12',t('level','màn')],
@@ -1510,6 +1523,11 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('New booster set','Bộ booster mới'),ul([
+        t(`Replaced Firework, Hammer and the old Saw. The old ones all removed pieces in almost the same way.`,`Thay Pháo hoa, Búa và Cưa cũ. Các booster cũ đều xóa vật gần như giống nhau.`),
+        t(`New set, weakest to strongest: ${P.bo1} (lights up rings that can turn), ${P.bo2} (cuts one connector), ${P.bo3} (removes one ring, hammer animation).`,`Bộ mới, từ yếu đến mạnh: ${P.bo1} (làm sáng vòng xoay được), ${P.bo2} (cắt một đầu nối), ${P.bo3} (xóa một vòng, hiệu ứng búa).`),
+        t(`Unlock levels are TBD. Revive and Retry with Booster now use ${P.bo3}.`,`Màn mở khóa chưa chốt (TBD). Hồi sinh và Chơi lại kèm công cụ giờ dùng ${P.bo3}.`)
+      ]))+
       ent(t('Main game mechanics','Cơ chế chính'),ul([
         t(`Ring: tap and move to rotate. A ring can turn a full 360° when nothing holds it back.`,`Vòng: chạm và di chuyển để xoay. Vòng xoay được trọn 360° nếu không có gì cản.`),
         t(`Connector: rewritten in simpler words. Both ways a link breaks are confirmed.`,`Đầu nối: viết lại cho dễ đọc. Xác nhận cả hai cách tách liên kết.`),
@@ -1526,9 +1544,9 @@ function view(l){
         t(`Both unlock after ${P.el2} (level 10). Levels TBD: ${P.el3} first, ${P.el4} last.`,`Cả hai mở sau ${P.el2} (màn 10). Màn mở chưa chốt (TBD): ${P.el3} trước, ${P.el4} sau cùng.`)
       ]))+
       ent(t('Saw booster','Booster Cưa'),ul([
-        t(`Added ${P.bo3} as the 3rd and strongest booster: it cuts a ring out and releases all its links. Unlock level TBD.`,`Thêm ${P.bo3} là booster thứ 3, mạnh nhất: cắt một vòng ra và nhả mọi liên kết của nó. Màn mở khóa chưa chốt (TBD).`),
-        t(`Boosters run from weakest to strongest: ${P.bo1}, ${P.bo2}, ${P.bo3}. Remote config Strong keys now belong to ${P.bo3}.`,`Booster xếp từ yếu đến mạnh: ${P.bo1}, ${P.bo2}, ${P.bo3}. Các key booster mạnh trong cấu hình từ xa giờ dành cho ${P.bo3}.`),
-        t(`Revive and Retry with Booster use ${P.bo3}, as in the template.`,`Hồi sinh và Chơi lại kèm công cụ dùng ${P.bo3}, như template.`)
+        t(`Added Saw as the 3rd and strongest booster: it cuts a ring out and releases all its links. Unlock level TBD.`,`Thêm Cưa là booster thứ 3, mạnh nhất: cắt một vòng ra và nhả mọi liên kết của nó. Màn mở khóa chưa chốt (TBD).`),
+        t(`Boosters run from weakest to strongest: Firework, Hammer, Saw. Remote config Strong keys now belong to Saw.`,`Booster xếp từ yếu đến mạnh: Pháo hoa, Búa, Cưa. Các key booster mạnh trong cấu hình từ xa giờ dành cho Cưa.`),
+        t(`Revive and Retry with Booster use Saw, as in the template.`,`Hồi sinh và Chơi lại kèm công cụ dùng Cưa, như template.`)
       ]))+
       ent(t('Review fixes','Sửa theo góp ý'),ul([
         t(`Removed Level progression (1.1), Play screen (HUD) (1.2), and IQ meter, Daily Streak and Level gift (1.3).`,`Bỏ Tiến trình màn chơi (1.1), Màn chơi (HUD) (1.2), và Chỉ số IQ, Chuỗi Ngày, Quà mốc màn (1.3).`),
@@ -1539,7 +1557,7 @@ function view(l){
         t(`Created this GDD from the template and the gameplay video of levels 1–10 (Screen_Recording_20261125_095843, 3 min 15 s).`,`Tạo tài liệu này từ template và video gameplay màn 1–10 (Screen_Recording_20261125_095843, 3 phút 15 giây).`),
         t(`Rules are written as seen in the video. Guesses are tagged “to verify”. Numbers not shown in the video are TBD.`,`Luật chơi ghi theo những gì thấy trong video. Phần suy luận được gắn nhãn “cần kiểm chứng”. Con số không có trong video ghi TBD.`),
         t(`Added the win screen seen in the video to 1.3.`,`Thêm vào 1.3 màn hình thắng thấy trong video.`),
-        t(`Left out: RV Slot (no slot row). Remote config, IAP and live ops are kept from the template. The game has 2 boosters, so the Strong booster keys are unused and Revive and Retry with Booster use the ${P.bo2}.`,`Không đưa vào: Ô quảng cáo thưởng (game không có hàng ô). Cấu hình từ xa, IAP và live ops giữ theo template. Game có 2 booster, nên các key booster mạnh chưa dùng, còn Hồi sinh và Chơi lại kèm công cụ dùng ${P.bo2}.`)
+        t(`Left out: RV Slot (no slot row). Remote config, IAP and live ops are kept from the template. The game has 2 boosters, so the Strong booster keys are unused and Revive and Retry with Booster use the Hammer.`,`Không đưa vào: Ô quảng cáo thưởng (game không có hàng ô). Cấu hình từ xa, IAP và live ops giữ theo template. Game có 2 booster, nên các key booster mạnh chưa dùng, còn Hồi sinh và Chơi lại kèm công cụ dùng Búa.`)
       ])));
 
 
