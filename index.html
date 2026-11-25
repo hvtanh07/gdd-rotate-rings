@@ -716,38 +716,45 @@ const DEMOS={
       fadeOut('.sL',3.0),fadeOut('.sR',3.0),...shardTracks('shL',3.0),...shardTracks('shR',3.05),...praiseTracks('pr',3.05)
     ]}
 };
-/* hero: a level-6-like board. Ring 4 (center) swings to show rotation; ring 2 (top right) has just shattered. */
+/* hero: a level-6-like board. The top-right ring is tapped, turns until its gap frees the connector, shatters, then comes back (loop).
+   Driven by the same keyframe runner as the demos (startHero), so the pause button and language switch keep working. */
+const FX='style="transform-box:fill-box;transform-origin:center"';
+const HERO={D:6.4,tracks:()=>[
+  ['.h-tap','opacity',[[0,0],[.6,0],[.7,.9],[1.15,0]]],['.h-tap','transform',[[.6,'scale(.5)'],[1.15,'scale(1.35)']]],
+  ['.h-sel','opacity',[[0,0],[.85,0],[.95,1],[1.9,1],[2.0,0]]],
+  ['.h-r2','transform',[[0,'rotate(0deg)'],[.9,'rotate(0deg)'],[1.9,'rotate(180deg)'],[4.6,'rotate(180deg)'],[4.62,'rotate(0deg)']]],
+  ['.h-r2','opacity',[[0,1],[2.05,1],[2.17,0],[4.7,0],[5.3,1]]],
+  ['.h-sh','opacity',[[0,0],[2.05,0],[2.13,1],[2.9,0]]],['.h-sh','transform',[[2.05,'scale(.35)'],[2.9,'scale(1.5)']]],
+  ['.h-pr','opacity',[[0,0],[2.1,0],[2.22,1],[3.3,1],[3.6,0]]],['.h-pr','transform',[[2.1,'scale(.6)'],[2.35,'scale(1.08)'],[2.5,'scale(1)']]]
+]};
 function fieldSVG(label){
-  const X=[80,170,260],Y=[132,217,302],R=30;
+  const X=[80,170,260],Y=[150,235,320],R=30;
   const C=[[6,3,7],[2,6,1],[3,8,2]];
   const G=[[225,270,0],[180,0,0],[135,90,45]];
   const cen=i=>[X[i%3],Y[Math.floor(i/3)]];
+  const col=i=>C[Math.floor(i/3)][i%3];
   const ang=(i,j)=>{const [a,b]=cen(i),[c,d]=cen(j);return Math.atan2(d-b,c-a)*180/Math.PI;};
-  const links=[[0,1],[0,3],[1,4],[3,4],[3,6],[6,7],[7,4],[7,8],[5,8]];
+  const links=[[0,1],[1,2],[0,3],[1,4],[3,4],[3,6],[6,7],[7,4],[7,8],[5,8]];
   let board='',plugs='';
-  for(let i=0;i<9;i++){
-    if(i===2||i===4)continue;
-    const [cx,cy]=cen(i);board+=ringP(cx,cy,R,C[Math.floor(i/3)][i%3],G[Math.floor(i/3)][i%3],62,8);
-  }
-  links.forEach(([i,j])=>{const a=ang(i,j),[x0,y0]=pt(...cen(i),R,a),[x1,y1]=pt(...cen(j),R,a+180);plugs+=armP(x0,y0,x1,y1,C[Math.floor(i/3)][i%3],5);});
-  const [cx4,cy4]=cen(4);
-  const spinA=(reduceMotion||paused)?'':`<animateTransform attributeName="transform" type="rotate" values="0 ${cx4} ${cy4};32 ${cx4} ${cy4};0 ${cx4} ${cy4};-32 ${cx4} ${cy4};0 ${cx4} ${cy4}" keyTimes="0;.3;.5;.8;1" dur="4.4s" repeatCount="indefinite"/>`;
-  const ring4=`<g>${ringP(cx4,cy4,R,6,0,62,8)}<circle cx="${cx4}" cy="${cy4}" r="${R-8}" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2" stroke-dasharray="4 5"/>${spinA}</g>`;
-  let sh='';for(let i=0;i<14;i++){const a=i*360/14,rad=18+((i*5)%4)*7,[x,y]=pt(260,132,rad,a);sh+=`<rect x="${(x-3).toFixed(1)}" y="${(y-3).toFixed(1)}" width="6" height="6" rx="1.4" class="f7" transform="rotate(${i*23} ${x} ${y})"/>`;}
-  const hud=`<text x="22" y="30" style="font:700 11px var(--body);fill:var(--muted)">Màn</text><text x="22" y="46" style="font:800 15px var(--display);fill:var(--ink)">6</text>`+
-    `<rect x="120" y="20" width="100" height="28" rx="14" fill="#F6E3C7"/><text x="170" y="39" text-anchor="middle" style="font:800 15px var(--display);fill:#7A4A1E">1350</text>`+
-    `<circle cx="272" cy="34" r="12" fill="#F6E3C7"/><circle cx="268" cy="31" r="2.2" class="f1"/><circle cx="275" cy="30" r="2.2" class="f2"/><circle cx="276" cy="37" r="2.2" class="f3"/>`+
-    `<circle cx="306" cy="34" r="12" fill="#F6E3C7"/><circle cx="306" cy="34" r="5" fill="none" stroke="#7A4A1E" stroke-width="3" stroke-dasharray="2.2 1.6"/>`;
-  const badge=x=>`<circle cx="${x}" cy="402" r="8" class="f1"/><text x="${x}" y="406" text-anchor="middle" style="font:700 10px var(--body);fill:#fff">3</text>`;
-  const bos=[['fw',84],['hm',150],['saw',216]].map(([k,x])=>`<g transform="translate(${x} 400) scale(1.6)">${boBtn(0,0,k)}</g>${badge(x+42)}`).join('');
+  for(let i=0;i<9;i++){if(i===2)continue;const [cx,cy]=cen(i);board+=ringP(cx,cy,R,col(i),G[Math.floor(i/3)][i%3],62,8);}
+  links.forEach(([i,j])=>{const a=ang(i,j),[x0,y0]=pt(...cen(i),R,a),[x1,y1]=pt(...cen(j),R,a+180);plugs+=armP(x0,y0,x1,y1,col(i),5);});
+  const [x2,y2]=cen(2);
+  const r2=`<g class="h-r2" ${FX}>${bb(x2,y2,R+6)}${ringP(x2,y2,R,7,0,62,8)}<circle class="h-sel" cx="${x2}" cy="${y2}" r="${R-8}" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="2" stroke-dasharray="4 5" style="opacity:0"/></g>`;
+  let sh='';for(let i=0;i<14;i++){const a=i*360/14,rad=16+((i*5)%4)*6,[x,y]=pt(x2,y2,rad,a);sh+=`<rect x="${(x-3).toFixed(1)}" y="${(y-3).toFixed(1)}" width="6" height="6" rx="1.4" class="f7"/>`;}
   return `<svg viewBox="0 0 340 466" role="img" aria-label="${esc(label)}">
     <rect x="0" y="0" width="340" height="466" fill="#FBEEDB"/>
-    <g class="part part-A">${hud}${pin(80,62,'A')}</g>
-    <g class="part part-B">${board}${plugs}${pin(36,360,'B')}</g>
-    <g class="part part-C">${ring4}${pin(205,250,'C')}</g>
-    <g class="part part-D">${sh}<text x="262" y="98" text-anchor="middle" style="font:800 17px var(--display);fill:#fff;stroke:#1E88E5;stroke-width:3.5;paint-order:stroke">Excellent!</text>${pin(305,160,'D')}</g>
-    <g class="part part-E">${bos}${pin(66,413,'E')}</g>
+    <g class="part part-A">${board}${plugs}${pin(36,386,'A')}</g>
+    <g class="part part-B">${r2}<circle class="tap h-tap" cx="${x2}" cy="${y2+R}" r="15" ${FX.replace('"','"opacity:0;')}/>${pin(306,186,'B')}</g>
+    <g class="part part-C"><g class="h-sh" ${FX.replace('"','"opacity:0;')}>${bb(x2,y2,44)}${sh}</g><text class="h-pr" x="${x2-24}" y="${y2-54}" text-anchor="middle" ${FX.replace('"','"opacity:0;font:800 17px var(--display);fill:#fff;stroke:#1E88E5;stroke-width:3.5;paint-order:stroke;')}>Excellent!</text>${pin(316,96,'C')}</g>
   </svg>`;
+}
+let heroAnims=[];
+function startHero(){
+  heroAnims.forEach(a=>{try{a.cancel();}catch(e){}});heroAnims=[];
+  const f=$('#field');if(!f||!Element.prototype.animate)return;
+  const D=HERO.D;
+  HERO.tracks().forEach(([sel,prop,frames])=>{f.querySelectorAll(sel).forEach(el=>{try{heroAnims.push(el.animate(kfs(frames,prop,D),{duration:D*1000,iterations:Infinity}));}catch(e){}});});
+  if(paused)heroAnims.forEach(a=>{try{a.pause();}catch(e){}});
 }
 
 /* ---------- win-screen bonus gauge ---------- */
@@ -1496,6 +1503,10 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('Play-screen sketch','Hình màn chơi'),ul([
+        t(`The animation at the top now plays: the top-right ring turns, frees its connector and shatters, in a loop.`,`Hình động ở đầu trang giờ đã chạy: vòng trên cùng bên phải xoay, gỡ đầu nối rồi vỡ, lặp lại liên tục.`),
+        t(`Removed the HUD and the booster buttons from the sketch.`,`Bỏ HUD và các nút booster khỏi hình.`)
+      ]))+
       ent(t('New elements','Yếu tố mới'),ul([
         t(`Added ${P.el3}: it cannot turn until the piece holding its key shatters. Added the stuck case to Fail-safe.`,`Thêm ${P.el3}: không xoay được cho tới khi vật giữ chìa khóa vỡ. Thêm trường hợp kẹt vào Cơ chế chống kẹt.`),
         t(`Added ${P.el4}: meshed gears turn together in opposite directions.`,`Thêm ${P.el4}: các bánh răng ăn khớp cùng xoay ngược chiều.`),
@@ -1522,11 +1533,9 @@ function view(l){
   /* ----- hero ----- */
   /* PER GAME: one legend row per part of the play-screen sketch (A to E), matching the part-A … part-E groups in fieldSVG */
   const legend=[
-    ['A',t('HUD','HUD'),t('Level number, score, theme and settings buttons.','Số màn, điểm, nút giao diện và nút cài đặt.')],
-    ['B',t('Ring cluster','Cụm vòng'),t('Open rings of many colors, hooked together by arms and connectors.','Các vòng hở nhiều màu, móc vào nhau bằng tay và đầu nối.')],
-    ['C',t('Ring being turned','Vòng đang xoay'),t('The tapped ring turns with a light inner line. Its gap frees the connectors it passes.','Vòng được chạm sẽ xoay, có đường sáng bên trong. Chỗ hở đi qua đầu nối nào thì gỡ đầu nối đó.')],
-    ['D',t('Clear and praise','Vỡ và lời khen'),t('A piece with no links shatters into shards, and a praise word pops.','Vật hết liên kết vỡ thành mảnh, kèm một lời khen.')],
-    ['E',t('Boosters','Booster'),t(`${P.bo1}, ${P.bo2} and ${P.bo3}, from weakest to strongest, each with its count.`,`${P.bo1}, ${P.bo2} và ${P.bo3}, từ yếu đến mạnh, mỗi nút có số lượng.`)]
+    ['A',t('Ring cluster','Cụm vòng'),t('Open rings of many colors, hooked together by arms and connectors.','Các vòng hở nhiều màu, móc vào nhau bằng tay và đầu nối.')],
+    ['B',t('Ring being turned','Vòng đang xoay'),t('The tapped ring turns with a light inner line. Its gap frees the connectors it passes.','Vòng được chạm sẽ xoay, có đường sáng bên trong. Chỗ hở đi qua đầu nối nào thì gỡ đầu nối đó.')],
+    ['C',t('Clear and praise','Vỡ và lời khen'),t('A piece with no links shatters into shards, and a praise word pops.','Vật hết liên kết vỡ thành mảnh, kèm một lời khen.')]
   ];
   const hero=`<div class="hero" id="top" data-sec="top" data-spy="top">
     <div>
@@ -1537,10 +1546,10 @@ function view(l){
       <ul class="legend">${legend.map(g=>`<li><button type="button" data-part="${g[0]}" aria-pressed="false"><span class="pinl" data-nosearch>${g[0]}</span><span><b>${g[1]}</b><span class="d">${g[2]}</span></span></button></li>`).join('')}</ul>
     </div>
     <figure class="field${paused?' paused':''}" id="field">
-      <div class="field-box">${fieldSVG(t('Sketch of a play screen: HUD on top, a cluster of colored rings linked by connectors in the middle, two booster buttons at the bottom.','Hình minh họa màn chơi: HUD ở trên, cụm vòng nhiều màu nối bằng đầu nối ở giữa, hai nút booster ở dưới.'))}</div>
+      <div class="field-box">${fieldSVG(t('Sketch of a play screen: a cluster of colored rings linked by connectors. The top-right ring turns, comes free and shatters.','Hình minh họa màn chơi: cụm vòng nhiều màu nối bằng đầu nối. Vòng trên cùng bên phải xoay, được gỡ rồi vỡ.'))}</div>
       <div class="field-foot"><button type="button" class="pause" id="pauseBtn">${paused?ui.play:ui.pause}</button></div>
-      <figcaption>${t(`Sketch based on level 6 of the recording. The center ring swings to show a rotation.`,
-                       `Hình dựa trên màn 6 trong video. Vòng ở giữa lắc qua lại để minh họa thao tác xoay.`)}</figcaption>
+      <figcaption>${t(`Sketch based on level 6 of the recording. The top-right ring turns until its gap frees the connector, then shatters.`,
+                       `Hình dựa trên màn 6 trong video. Vòng trên cùng bên phải xoay tới khi chỗ hở gỡ được đầu nối, rồi vỡ.`)}</figcaption>
     </figure>
   </div>`;
 
@@ -1792,6 +1801,7 @@ function render(){
   runSearch(false);
   spy();
   startDemos();
+  startHero();
   gaugeUI();
   if(G.swing&&!G.raf)G.raf=requestAnimationFrame(gaugeTick);
 }
@@ -1838,7 +1848,7 @@ document.addEventListener('click',e=>{
   }
   if(tg.closest('#gNext')){G.res='next';startSwing();gaugeUI();return;}
   const pb=tg.closest('#pauseBtn');
-  if(pb){paused=!paused;$('#field').classList.toggle('paused',paused);const fs=$('#field svg');if(fs&&fs.pauseAnimations){if(paused)fs.pauseAnimations();else fs.unpauseAnimations();}pb.textContent=paused?UI[lang].play:UI[lang].pause;return;}
+  if(pb){paused=!paused;$('#field').classList.toggle('paused',paused);heroAnims.forEach(a=>{try{if(paused)a.pause();else a.play();}catch(e){}});pb.textContent=paused?UI[lang].play:UI[lang].pause;return;}
   const lg=tg.closest('.legend button');
   if(lg){
     const was=lg.getAttribute('aria-pressed')==='true';
