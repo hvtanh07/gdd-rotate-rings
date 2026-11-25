@@ -849,7 +849,7 @@ function view(l){
 
   /* PER GAME: demo captions, one per DEMOS key */
   const DCAP={
-    rotate:t('Tap the orange ring. It turns until its gap reaches the blue connector, the link breaks and both rings shatter.','Chạm vòng cam. Vòng xoay tới khi chỗ hở gặp đầu nối xanh, liên kết bị tách và cả hai vòng vỡ.'),
+    rotate:t('Tap and move the orange ring. It turns until its gap reaches the blue connector, the link breaks and both rings shatter.','Chạm và di chuyển vòng cam. Vòng xoay tới khi chỗ hở gặp đầu nối xanh, liên kết bị tách và cả hai vòng vỡ.'),
     linkBar:t('Turn both rings so their gaps pass the grey sleeves. Once both ends are free, the bar shatters, then the rings.','Xoay cả hai vòng cho chỗ hở đi qua khớp xám. Khi cả hai đầu được gỡ, thanh nối vỡ, sau đó tới các vòng.'),
     pin:t('Turn the ring until its gap reaches the clamp. The pin drops and shatters, then the ring.','Xoay vòng tới khi chỗ hở gặp kẹp. Chốt rơi ra và vỡ, sau đó tới vòng.'),
     lockedRing:t('A tap on the locked ring only shakes it. The yellow ring turns, shatters, and its key flies to the lock. Now the blue ring turns.','Chạm vòng khóa thì vòng chỉ rung. Vòng vàng xoay rồi vỡ, chìa khóa bay tới ổ khóa. Lúc này vòng xanh mới xoay được.'),
@@ -888,15 +888,20 @@ function view(l){
         `Vòng hở hình chữ C, có một chỗ hở. Trông như ống bóng. Thấy 7 màu (xem 3.2).`),
       t(`A ring can carry arms: a short stub or a long straight arm. Each arm ends in a connector of the ring’s color.`,
         `Vòng có thể có tay: tay ngắn hoặc tay dài thẳng. Cuối mỗi tay là một đầu nối cùng màu vòng.`),
-      t(`Tap a ring: it turns around its center, arms and all. The step size and direction are TBD. In the video one tap turns it by about 90° to 180°.`,
-        `Chạm vào vòng: vòng xoay quanh tâm, kéo theo các tay. Góc và chiều xoay chưa chốt (TBD). Trong video, mỗi lần chạm xoay khoảng 90° đến 180°.`)+' '+inf,
+      t(`Tap and move to rotate the ring. It turns around its center, arms and all.`,
+        `Chạm và di chuyển để xoay vòng. Vòng xoay quanh tâm, kéo theo các tay.`),
+      t(`The ring can turn a full 360° when nothing holds it back.`,
+        `Vòng xoay được trọn 360° nếu không có gì cản.`),
       t(`While turning, the ring shows a light inner line (selected state).`,`Khi đang xoay, vòng hiện một đường sáng bên trong (trạng thái được chọn).`),
       t(`Rings can overlap. No collision between pieces was seen.`,`Các vòng có thể chồng lên nhau. Không thấy va chạm giữa các vật.`)
     ]),[seen],demo('rotate'))+
     ent(nm('Connector','Đầu nối'),ul([
-      t(`The plug at the end of an arm. It sits on the arc of another ring and holds the two together.`,`Đầu tròn ở cuối tay. Nó nằm trên cung của một vòng khác và giữ hai vòng với nhau.`),
-      t(`The link breaks when the other ring turns so that its gap passes the plug.`,`Liên kết bị tách khi vòng kia xoay để chỗ hở đi qua đầu nối.`),
-      t(`The link may also break when the owner ring turns the plug off the other ring’s arc.`,`Liên kết có thể cũng bị tách khi vòng chủ xoay đầu nối ra khỏi cung của vòng kia.`)+' '+inf
+      t(`A connector is the round tip at the end of a ring’s arm.`,`Đầu nối là đầu tròn ở cuối tay của vòng.`),
+      t(`It rests on another ring. That is what keeps the two rings together.`,`Nó tựa lên một vòng khác. Nhờ vậy hai vòng dính với nhau.`),
+      t(`The two rings come apart in one of two ways:`,`Hai vòng tách ra theo một trong hai cách:`)+ol([
+        t(`Turn the other ring until its gap reaches the connector. The connector slips out.`,`Xoay vòng kia tới khi chỗ hở chạm đầu nối. Đầu nối tuột ra.`),
+        t(`Turn the ring that owns the arm. The connector swings off the other ring.`,`Xoay vòng có tay. Đầu nối bị kéo ra khỏi vòng kia.`)
+      ])
     ]))+
     ent(t('Clear rule','Quy tắc dọn'),ul([
       t(`A piece with no links left shatters at once: shards of its color burst out and fade.`,`Vật không còn liên kết vỡ ngay: mảnh vụn cùng màu bung ra rồi mờ dần.`),
@@ -905,8 +910,10 @@ function view(l){
     ]))+
     ent(t('Score and praise','Điểm và lời khen'),ul([
       t(`The score starts at 0 each level and counts up on each clear.`,`Điểm bắt đầu từ 0 mỗi màn và tăng dần sau mỗi lần dọn.`),
-      t(`Praise pops over the cleared piece: Great!, Excellent!, Amazing!, Incredible!. What picks the tier is TBD (maybe clears in a row).`,`Lời khen hiện trên vật vừa vỡ: Great!, Excellent!, Amazing!, Incredible!. Cách chọn mức chưa chốt (TBD), có thể theo số lần dọn liên tiếp.`)+' '+inf,
-      t(`Score formula: TBD. Win-screen scores seen: level 1: 400, level 4: 1900, level 7: 2200, level 8: 2250, levels 9 and 10: 2300.`,`Công thức điểm: chưa chốt (TBD). Điểm ở màn hình thắng thấy trong video: màn 1: 400, màn 4: 1900, màn 7: 2200, màn 8: 2250, màn 9 và 10: 2300.`)
+      t(`Each shattered ring gives 300 points.`,`Mỗi vòng vỡ được 300 điểm.`),
+      t(`On each shatter, one praise word pops over the spot. It is picked at random from this list (every word seen in the video):`,`Mỗi lần vỡ, một lời khen hiện ở chỗ đó. Lời khen được chọn ngẫu nhiên từ danh sách sau (mọi lời khen thấy trong video):`)+ol([
+        '<span lang="en">Great!</span>','<span lang="en">Excellent!</span>','<span lang="en">Amazing!</span>','<span lang="en">Incredible!</span>'
+      ])
     ]));
 
   /* FIXED: 1.3 is shared logic across projects. Keep it as it is and only change the numbers. */
@@ -1166,9 +1173,9 @@ function view(l){
       [t('Load the level','Tải màn chơi'),t('The game loads into level 1.','Trò chơi vào màn 1.'),dash,dash,dash],
       [t('Terms &amp; Conditions / Privacy Policy','Điều khoản / Chính sách quyền riêng tư'),
        t('The player taps to agree to the Terms &amp; Conditions / Privacy Policy.','Người chơi chạm đồng ý với Điều khoản / Chính sách quyền riêng tư.'),dash,dash,dash],
-      [t('Tap a ring','Chạm vào vòng'),t('The player taps the orange ring. It turns and its gap frees the blue connector.','Người chơi chạm vòng cam. Vòng xoay và chỗ hở gỡ đầu nối xanh.'),
-       t('Orange ring, with a hand pointer on it','Vòng cam, có bàn tay chỉ vào'),t('Hand pointer only. No text seen in the video.','Chỉ có bàn tay chỉ. Không thấy chữ trong video.'),dash],
-      [t('Level complete','Hoàn thành màn'),t('Both rings shatter. Win screen with 400 points.','Cả hai vòng vỡ. Màn hình thắng, 400 điểm.'),dash,dash,t('Yes','Có')]
+      [t('Tap a ring','Chạm vào vòng'),t('The player taps and moves the orange ring. It turns and its gap frees the blue connector.','Người chơi chạm và di chuyển vòng cam. Vòng xoay và chỗ hở gỡ đầu nối xanh.'),
+       t('Orange ring, with a hand pointer on it','Vòng cam, có bàn tay chỉ vào'),popup('Rotate the ring to the right spot to unlock it','Xoay vòng đến đúng vị trí để mở khóa'),dash],
+      [t('Level complete','Hoàn thành màn'),t('Both rings shatter. The win screen opens.','Cả hai vòng vỡ. Màn hình thắng mở ra.'),dash,dash,t('Yes','Có')]
     ],'wide steps-tbl');
 
   /* PER GAME: one row per element, in unlock order */
@@ -1503,6 +1510,12 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('Main game mechanics','Cơ chế chính'),ul([
+        t(`Ring: tap and move to rotate. A ring can turn a full 360° when nothing holds it back.`,`Vòng: chạm và di chuyển để xoay. Vòng xoay được trọn 360° nếu không có gì cản.`),
+        t(`Connector: rewritten in simpler words. Both ways a link breaks are confirmed.`,`Đầu nối: viết lại cho dễ đọc. Xác nhận cả hai cách tách liên kết.`),
+        t(`Score: 300 points per shattered ring. Praise is picked at random from Great!, Excellent!, Amazing!, Incredible!.`,`Điểm: 300 điểm mỗi vòng vỡ. Lời khen chọn ngẫu nhiên từ Great!, Excellent!, Amazing!, Incredible!.`),
+        t(`FTUE level 1: added the popup text seen in the video.`,`FTUE màn 1: thêm chữ popup thấy trong video.`)
+      ]))+
       ent(t('Play-screen sketch','Hình màn chơi'),ul([
         t(`The animation at the top now plays: the top-right ring turns, frees its connector and shatters, in a loop.`,`Hình động ở đầu trang giờ đã chạy: vòng trên cùng bên phải xoay, gỡ đầu nối rồi vỡ, lặp lại liên tục.`),
         t(`Removed the HUD and the booster buttons from the sketch.`,`Bỏ HUD và các nút booster khỏi hình.`)
