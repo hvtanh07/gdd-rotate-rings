@@ -648,6 +648,34 @@ const DEMOS={
       fadeOut('.pinx',2.3),...shardTracks('shP',2.35),...praiseTracks('pr',2.4),
       fadeOut('.rP',2.9),...shardTracks('shR',2.9)
     ]},
+  /* element: the locked ring will not turn until the piece holding its key shatters */
+  lockedRing:{D:7,
+    svg:()=>`<g class="kR">${bb(60,100,34)}${ringP(60,100,28,4,180,64)}`+
+        `<g class="key"><circle cx="60" cy="72" r="6" fill="none" stroke="#B9803F" stroke-width="3"/><path d="M60 78V92M60 86h5M60 91h4" stroke="#B9803F" stroke-width="3" stroke-linecap="round"/></g></g>`+
+      `<g class="lR">${bb(140,100,56)}<g class="lRs">${bb(140,100,56)}${ringP(140,100,28,2,270,64)}${armP(112,100,88,100,2)}</g></g>`+
+      `<g class="lk"><path d="M134 98v-5a6 6 0 0 1 12 0v5" fill="none" stroke="#566079" stroke-width="3"/><rect x="130" y="97" width="20" height="15" rx="3.5" fill="#566079"/><circle cx="140" cy="104" r="2.2" fill="#fff"/></g>`+
+      tap(140,100)+`<circle class="tap2 tap" cx="60" cy="100" r="15" style="opacity:0"/><circle class="tap3 tap" cx="140" cy="130" r="15" style="opacity:0"/>`+
+      shards(60,100,4,'shK')+shards(140,100,2,'shL'),
+    tracks:()=>[
+      ...tapTracks(.5),['.lRs','transform',[[.6,'rotate(0deg)'],[.72,'rotate(-6deg)'],[.84,'rotate(6deg)'],[.96,'rotate(0deg)']]],
+      ...tapTracks(1.5,'.tap2'),spin('.kR',1.8,2.6,180),
+      ['.kR > *:not(.key)','opacity',[[0,1],[2.7,1],[2.82,0]]],...shardTracks('shK',2.7),
+      ['.key','transform',[[2.8,'translate(0px,0px)'],[3.5,'translate(-80px,24px)']]],
+      ['.key','opacity',[[0,1],[3.4,1],[3.55,0]]],
+      ['.lk','opacity',[[0,1],[3.45,1],[3.7,0]]],['.lk','transform',[[3.45,'scale(1)'],[3.7,'scale(1.5)']]],
+      ...tapTracks(4.1,'.tap3'),spin('.lR',4.4,5.2,180),
+      fadeOut('.lR',5.3),...shardTracks('shL',5.3)
+    ]},
+  /* element: two gear rings mesh; turning one turns the other the opposite way */
+  gearRing:{D:5.6,
+    svg:()=>`<g class="gA">${bb(70,112,36)}<circle cx="70" cy="112" r="31" fill="none" class="s6" stroke-width="6" stroke-dasharray="4.4 4.4"/>${ringP(70,112,26,6,180,60)}</g>`+
+      `<g class="gB">${bb(130,112,36)}<circle cx="130" cy="112" r="31" fill="none" class="s3" stroke-width="6" stroke-dasharray="4.4 4.4"/>${ringP(130,112,26,3,0,60)}</g>`+
+      `<g class="pR">${ringP(130,40,18,7,270,70)}${armP(130,58,130,86,7)}</g>`+
+      tap(70,112)+shards(130,46,7,'shP',9,24)+praise(100,186,'Excellent!','pr'),
+    tracks:()=>[
+      ...tapTracks(.6),spin('.gA',.9,2.0,90),spin('.gB',.9,2.0,-90),
+      fadeOut('.pR',2.15),...shardTracks('shP',2.15),...praiseTracks('pr',2.2)
+    ]},
   /* booster: a firework flies to one random piece and clears it */
   firework:{D:5.2,
     svg:()=>`${ringP(56,62,26,7,200,60)}${armP(82,62,104,62,7)}`+
@@ -800,11 +828,11 @@ function view(l){
 
   /* names reused across sections */
   const N={
-    el1:nm('Link Bar','Thanh nối'),el2:nm('Pin','Chốt treo'),
+    el1:nm('Link Bar','Thanh nối'),el2:nm('Pin','Chốt treo'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
     bo1:nm('Firework','Pháo hoa'),bo2:nm('Hammer','Búa'),bo3:nm('Saw','Cưa')
   };
   const P={ /* plain names for running text and tables */
-    el1:t('Link Bar','Thanh nối'),el2:t('Pin','Chốt treo'),
+    el1:t('Link Bar','Thanh nối'),el2:t('Pin','Chốt treo'),el3:t('Locked Ring','Vòng khóa'),el4:t('Gear Ring','Bánh răng'),
     bo1:t('Firework','Pháo hoa'),bo2:t('Hammer','Búa'),bo3:t('Saw','Cưa')
   };
   const withEl=t('With elements','Khi gặp yếu tố đặc biệt');
@@ -817,6 +845,8 @@ function view(l){
     rotate:t('Tap the orange ring. It turns until its gap reaches the blue connector, the link breaks and both rings shatter.','Chạm vòng cam. Vòng xoay tới khi chỗ hở gặp đầu nối xanh, liên kết bị tách và cả hai vòng vỡ.'),
     linkBar:t('Turn both rings so their gaps pass the grey sleeves. Once both ends are free, the bar shatters, then the rings.','Xoay cả hai vòng cho chỗ hở đi qua khớp xám. Khi cả hai đầu được gỡ, thanh nối vỡ, sau đó tới các vòng.'),
     pin:t('Turn the ring until its gap reaches the clamp. The pin drops and shatters, then the ring.','Xoay vòng tới khi chỗ hở gặp kẹp. Chốt rơi ra và vỡ, sau đó tới vòng.'),
+    lockedRing:t('A tap on the locked ring only shakes it. The yellow ring turns, shatters, and its key flies to the lock. Now the blue ring turns.','Chạm vòng khóa thì vòng chỉ rung. Vòng vàng xoay rồi vỡ, chìa khóa bay tới ổ khóa. Lúc này vòng xanh mới xoay được.'),
+    gearRing:t('Tap the orange gear: it turns one way and the green gear turns the other way. The green gap frees the purple ring.','Chạm bánh răng cam: nó xoay một chiều, bánh răng xanh xoay ngược lại. Chỗ hở của vòng xanh gỡ được vòng tím.'),
     firework:t('Tap the firework. It flies to one random piece and clears it.','Chạm pháo hoa. Pháo bay tới một vật ngẫu nhiên và dọn nó.'),
     hammer:t('Tap the hammer, then tap any piece. The hammer smashes it.','Chạm búa, rồi chạm vào vật bất kỳ. Búa đập vỡ vật đó.'),
     saw:t('Tap the saw, then tap a ring. The saw cuts it out, its links are released and the freed rings shatter too.','Chạm cưa, rồi chạm vào một vòng. Cưa cắt vòng đó ra, các liên kết được nhả và những vòng được gỡ cũng vỡ theo.')
@@ -1057,8 +1087,26 @@ function view(l){
       t(`Turn the ring until its gap reaches the clamp: the pin drops off and shatters (“Great!” in the video).`,`Xoay vòng tới khi chỗ hở gặp kẹp: chốt rơi ra và vỡ (video hiện “Great!”).`),
       fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
     ]),unlock(10),demo('pin'))+
+    ent(N.el3,ul([
+      t(`A ring with a padlock on it. It cannot turn: a tap only shakes it.`,`Vòng có gắn ổ khóa. Vòng không xoay được: chạm vào chỉ làm vòng rung.`),
+      t(`Its key sits on another piece in the level (a ring or a ${P.el1}).`,`Chìa khóa nằm trên một vật khác trong màn (một vòng hoặc một ${P.el1}).`),
+      t(`When the piece holding the key shatters, the key flies to the lock and the lock opens. From then on it is a normal ring.`,`Khi vật giữ chìa khóa vỡ, chìa khóa bay tới ổ khóa và ổ khóa mở. Từ đó nó là vòng bình thường.`),
+      t(`While locked, it still clears if its neighbors release all its links.`,`Khi còn khóa, vòng vẫn được dọn nếu các vòng bên cạnh nhả hết liên kết của nó.`),
+      t(`The player must plan the order: free the key holder first.`,`Người chơi phải tính thứ tự: gỡ vật giữ chìa khóa trước.`),
+      t(`Boosters: ${P.bo1} and ${P.bo2} on the key holder also release the key. ${P.bo2} and ${P.bo3} on the locked ring clear it, lock and all.`,`Booster: ${P.bo1} và ${P.bo2} lên vật giữ chìa cũng nhả chìa. ${P.bo2} và ${P.bo3} lên vòng khóa dọn luôn cả vòng lẫn ổ khóa.`),
+      fsLine(`the key holder can only be freed by turning the locked ring.`,`vật giữ chìa khóa chỉ gỡ được bằng cách xoay vòng khóa.`)
+    ]),unlock('TBD'),demo('lockedRing'))+
+    ent(N.el4,ul([
+      t(`A ring with teeth on its outer edge. Two or more gear rings sit next to each other with their teeth meshed.`,`Vòng có răng ở mép ngoài. Hai hoặc nhiều bánh răng nằm cạnh nhau, răng ăn khớp.`),
+      t(`Tap one: it turns one step, and every gear meshed with it turns the same step in the opposite direction.`,`Chạm một vòng: vòng đó xoay một bước, mọi bánh răng ăn khớp với nó xoay cùng bước theo chiều ngược lại.`),
+      t(`Each move changes two gaps at once, so a move that helps one gear can block the other.`,`Mỗi lần xoay đổi hai chỗ hở cùng lúc, nên lần xoay có lợi cho vòng này có thể chặn vòng kia.`),
+      t(`Meshing is not a link. A gear ring clears when it has no connector links left, like any ring.`,`Ăn khớp không phải là liên kết. Bánh răng được dọn khi hết liên kết đầu nối, như mọi vòng.`),
+      t(`Harder to read than other elements, so it unlocks last.`,`Khó đọc hơn các yếu tố khác, nên mở sau cùng.`),
+      fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
+    ]),unlock('TBD'),demo('gearRing'))+
     ent(nm('Fail-safe','Cơ chế chống kẹt'),ul([
-      t(`No element counts down on player actions. Rings can be turned any number of times, so a level cannot get stuck.`,`Không yếu tố nào đếm ngược theo thao tác. Vòng xoay được không giới hạn, nên màn chơi không thể bị kẹt.`),
+      t(`No element counts down on player actions. Rings can be turned any number of times. The only stuck case is the ${P.el3} below.`,`Không yếu tố nào đếm ngược theo thao tác. Vòng xoay được không giới hạn. Trường hợp kẹt duy nhất là ${P.el3} bên dưới.`),
+      t(`Stuck: the piece holding the key can only be freed by turning the ${P.el3}. Level design must avoid this. If it still happens, the lock opens by itself.`,`Kẹt: vật giữ chìa khóa chỉ gỡ được bằng cách xoay ${P.el3}. Thiết kế màn phải tránh trường hợp này. Nếu vẫn xảy ra, ổ khóa tự mở.`),
       t(`If a move limit is added later (see the lose condition in 1.1), define the stuck cases here. TBD.`,`Nếu sau này thêm giới hạn move (xem điều kiện thua ở 1.1), cần định nghĩa trường hợp kẹt ở đây. Chưa chốt (TBD).`)
     ])).replace('<div class="ent">','<div class="ent" id="lock-fail-safe">');
 
@@ -1125,7 +1173,9 @@ function view(l){
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
       [N.el1,tbd+' '+t('(no popup seen at level 7)','(không thấy popup ở màn 7)'),lvl(7)],
-      [N.el2,tbd+' '+t('(no popup seen at level 10)','(không thấy popup ở màn 10)'),lvl(10)]
+      [N.el2,tbd+' '+t('(no popup seen at level 10)','(không thấy popup ở màn 10)'),lvl(10)],
+      [N.el3,popup('Locked ring!<br>Break the piece with the key first.','Vòng khóa!<br>Phá vật giữ chìa khóa trước.'),lvl('TBD')],
+      [N.el4,popup('Gear rings!<br>Turn one, its partner turns the other way.','Bánh răng!<br>Xoay một vòng, vòng kia xoay ngược chiều.'),lvl('TBD')]
     ]);
 
   /* PER GAME: one row per booster */
@@ -1144,7 +1194,8 @@ function view(l){
     [1,t('First tutorial','Hướng dẫn đầu tiên'),'ftue','ftue-steps','FTUE'],
     [4,P.bo1,'boost','booster-mechanics'],[7,P.el1,'elem','elements-mechanics'],
     [8,P.bo2,'boost','booster-mechanics'],[10,P.el2,'elem','elements-mechanics'],
-    ['TBD',P.bo3,'boost','booster-mechanics']
+    ['TBD',P.bo3,'boost','booster-mechanics'],['TBD',P.el3,'elem','elements-mechanics'],
+    ['TBD',P.el4,'elem','elements-mechanics']
   ];
   B['ftue--tutorial:after']=`<div class="glance">
     <h4>${t('Unlock order at a glance','Thứ tự mở khóa theo màn')}</h4>
@@ -1172,7 +1223,9 @@ function view(l){
   const an=t('Animation','Chuyển động'),look=t('Look','Hình ảnh');
   B['element-object-concept']=
     ent(N.el1,params([[look,t('Colored tube, straight or bent, with grey metal sleeves at the ends.','Ống màu, thẳng hoặc gập, hai đầu có khớp kim loại xám.')],[an,t('Shatters into shards of its color, like a ring.','Vỡ thành mảnh cùng màu, giống vòng.')+' '+inf]]))+
-    ent(N.el2,params([[look,t('Red glossy capsule with a grey metal clamp.','Viên con nhộng đỏ bóng, có kẹp kim loại xám.')],[an,t('Drops off the ring and shatters into red shards.','Rơi khỏi vòng và vỡ thành mảnh đỏ.')]]));
+    ent(N.el2,params([[look,t('Red glossy capsule with a grey metal clamp.','Viên con nhộng đỏ bóng, có kẹp kim loại xám.')],[an,t('Drops off the ring and shatters into red shards.','Rơi khỏi vòng và vỡ thành mảnh đỏ.')]]))+
+    ent(N.el3,params([[look,t('A normal ring with a grey padlock on its arc. The key is a small gold key stuck on another piece.','Vòng bình thường có ổ khóa xám trên cung. Chìa khóa là chìa vàng nhỏ gắn trên vật khác.')],[an,t('Tap while locked: the ring shakes. Key holder shatters: the key flies to the lock, the lock pops open and fades.','Chạm khi còn khóa: vòng rung. Vật giữ chìa vỡ: chìa bay tới ổ khóa, ổ khóa bật mở rồi mờ đi.')]]))+
+    ent(N.el4,params([[look,t('A ring with a toothed outer rim in the same color.','Vòng có vành răng ở mép ngoài, cùng màu vòng.')],[an,t('Meshed gears turn together in opposite directions, teeth rolling against each other.','Các bánh răng ăn khớp cùng xoay ngược chiều, răng lăn vào nhau.')]]));
 
   B['booster-object-concept']=
     ent(N.bo1,params([[look,t('Purple and white striped rocket.','Quả pháo sọc tím trắng.')],[an,t('Unlock: glows in the middle of the dimmed screen with sparkles. Use: TBD, probably the rocket flies to the target and bursts.','Mở khóa: sáng ở giữa màn hình tối, có lấp lánh. Khi dùng: chưa chốt (TBD), có thể pháo bay tới mục tiêu rồi nổ.')]]))+
@@ -1197,6 +1250,9 @@ function view(l){
     ['Praise','core',t('Great! / Excellent! / Amazing! / Incredible! pops','Lời khen Great! / Excellent! / Amazing! / Incredible! hiện lên'),0],
     ['Link Bar Break','el',t(`A ${P.el1} shatters`,`${P.el1} vỡ`),2],
     ['Pin Drop','el',t(`A ${P.el2} drops off its ring`,`${P.el2} rơi khỏi vòng`),2],
+    ['Lock Shake','el',t(`The player taps a ${P.el3} that is still locked`,`Người chơi chạm ${P.el3} khi còn khóa`),1],
+    ['Lock Open','el',t(`A key reaches its lock and the ${P.el3} opens`,`Chìa khóa tới ổ khóa và ${P.el3} mở`),2],
+    ['Gear Turn','el',t(`Meshed ${P.el4}s turn together`,`Các ${P.el4} ăn khớp cùng xoay`),1],
     ['Firework','bo',t(`The player uses ${P.bo1}`,`Người chơi dùng ${P.bo1}`),2],
     ['Hammer','bo',t(`The player uses ${P.bo2}`,`Người chơi dùng ${P.bo2}`),3],
     ['Saw','bo',t(`The player uses ${P.bo3}`,`Người chơi dùng ${P.bo3}`),3]
@@ -1444,6 +1500,11 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('New elements','Yếu tố mới'),ul([
+        t(`Added ${P.el3}: it cannot turn until the piece holding its key shatters. Added the stuck case to Fail-safe.`,`Thêm ${P.el3}: không xoay được cho tới khi vật giữ chìa khóa vỡ. Thêm trường hợp kẹt vào Cơ chế chống kẹt.`),
+        t(`Added ${P.el4}: meshed gears turn together in opposite directions.`,`Thêm ${P.el4}: các bánh răng ăn khớp cùng xoay ngược chiều.`),
+        t(`Both unlock after ${P.el2} (level 10). Levels TBD: ${P.el3} first, ${P.el4} last.`,`Cả hai mở sau ${P.el2} (màn 10). Màn mở chưa chốt (TBD): ${P.el3} trước, ${P.el4} sau cùng.`)
+      ]))+
       ent(t('Saw booster','Booster Cưa'),ul([
         t(`Added ${P.bo3} as the 3rd and strongest booster: it cuts a ring out and releases all its links. Unlock level TBD.`,`Thêm ${P.bo3} là booster thứ 3, mạnh nhất: cắt một vòng ra và nhả mọi liên kết của nó. Màn mở khóa chưa chốt (TBD).`),
         t(`Boosters run from weakest to strongest: ${P.bo1}, ${P.bo2}, ${P.bo3}. Remote config Strong keys now belong to ${P.bo3}.`,`Booster xếp từ yếu đến mạnh: ${P.bo1}, ${P.bo2}, ${P.bo3}. Các key booster mạnh trong cấu hình từ xa giờ dành cho ${P.bo3}.`),
