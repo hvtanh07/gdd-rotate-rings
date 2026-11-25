@@ -825,20 +825,7 @@ function view(l){
     ent(t('Win and lose','Thắng và thua'),params([
       [t('Win','Thắng'),t(`Every ring and piece on the board is cleared.`,`Dọn hết mọi vòng và vật trên màn.`)],
       [t('Lose','Thua'),t(`No lose state in levels 1–10: the HUD shows no move limit and no timer. TBD.`,`Không thấy trạng thái thua ở màn 1–10: HUD không có giới hạn move hay đồng hồ. Chưa chốt (TBD).`)]
-    ]))+
-    ent(t('Level progression (as recorded)','Tiến trình màn chơi (theo video)'),
-      table(t('Levels 1 to 10','Màn 1 đến 10'),[t('Level','Màn'),t('Pieces (about)','Số vật (ước lượng)'),t('What is new','Điểm mới')],[
-        [lvl(1),'2',t('Tap tutorial with a hand pointer.','Hướng dẫn chạm, có bàn tay chỉ.')],
-        [lvl(2),'3',t('A chain of 3 rings. Daily Streak screen after the win.','Chuỗi 3 vòng. Màn Chuỗi Ngày sau khi thắng.')],
-        [lvl(3),'4',t('Rings hooked on more than one side.','Vòng được móc ở nhiều phía.')],
-        [lvl(4),'7',t(`${P.bo1} unlocks, first use free.`,`Mở ${P.bo1}, lần dùng đầu miễn phí.`)],
-        [lvl(5),'7',t('First closed ring (center, 4 stub arms).','Vòng kín đầu tiên (ở giữa, 4 tay ngắn).')],
-        [lvl(6),'13',t('Big grid. Long straight arms reach across the board.','Lưới lớn. Tay dài nối xa qua màn.')],
-        [lvl(7),'9',t(`${P.el1} with grey sleeves. IQ shows on the win screen.`,`${P.el1} có khớp xám. Chỉ số IQ hiện trên màn hình thắng.`)],
-        [lvl(8),'8',t(`${P.bo2} unlocks, first use free.`,`Mở ${P.bo2}, lần dùng đầu miễn phí.`)],
-        [lvl(9),'9',t('More closed rings.','Thêm vòng kín.')],
-        [lvl(10),'12',t(`${P.el1}s, a half-ring arc and the ${P.el2}. Level gift opens after the win.`,`Nhiều ${P.el1}, một cung nửa vòng và ${P.el2}. Mở quà mốc màn sau khi thắng.`)]
-      ],'compact')+`<p class="note">${t('Piece counts are read from single frames and may be off by one or two.','Số vật đếm từ ảnh chụp từng khung, có thể lệch 1–2.')}</p>`);
+    ]));
 
   B['main-game-mechanics']=
     ent(nm('Ring','Vòng'),ul([
@@ -869,12 +856,6 @@ function view(l){
       t(`The score starts at 0 each level and counts up on each clear.`,`Điểm bắt đầu từ 0 mỗi màn và tăng dần sau mỗi lần dọn.`),
       t(`Praise pops over the cleared piece: Great!, Excellent!, Amazing!, Incredible!. What picks the tier is TBD (maybe clears in a row).`,`Lời khen hiện trên vật vừa vỡ: Great!, Excellent!, Amazing!, Incredible!. Cách chọn mức chưa chốt (TBD), có thể theo số lần dọn liên tiếp.`)+' '+inf,
       t(`Score formula: TBD. Win-screen scores seen: level 1: 400, level 4: 1900, level 7: 2200, level 8: 2250, levels 9 and 10: 2300.`,`Công thức điểm: chưa chốt (TBD). Điểm ở màn hình thắng thấy trong video: màn 1: 400, màn 4: 1900, màn 7: 2200, màn 8: 2250, màn 9 và 10: 2300.`)
-    ]))+
-    ent(t('Play screen (HUD)','Màn chơi (HUD)'),params([
-      [t('Top left','Trên trái'),t(`“Màn N”: the level number.`,`“Màn N”: số màn.`)],
-      [t('Top center','Trên giữa'),t(`Score.`,`Điểm.`)],
-      [t('Top right','Trên phải'),t(`Theme (palette) button and Settings button.`,`Nút giao diện (bảng màu) và nút Cài đặt.`)],
-      [t('Bottom','Dưới'),t(`Two booster buttons. A lock badge until unlocked, then a red badge with the count.`,`Hai nút booster. Có biểu tượng khóa khi chưa mở, sau đó là chấm đỏ ghi số lượng.`)]
     ]));
 
   /* FIXED: 1.3 is shared logic across projects. Keep it as it is and only change the numbers. */
@@ -919,11 +900,11 @@ function view(l){
       lead(t(`A bar on the Victory screen: levels left until the next element unlocks.`,
              `Thanh trên màn hình chiến thắng: còn bao nhiêu màn nữa thì mở yếu tố tiếp theo.`))+
       panel(t('UI','Giao diện'),
-        `<div class="upm" role="img" data-nosearch aria-label="${esc(t('Sketch of the module: part A is a progress bar filled to 2 of 3, part B is a square icon box at its right end.','Hình minh họa: phần A là thanh tiến độ đang ở mức 2 trên 3, phần B là ô vuông chứa biểu tượng ở đầu bên phải.'))}">
-           <div class="upm-w bar"><span class="pinl upm-pin">A</span><div class="upm-bar"><div class="upm-fill"></div><span class="upm-n">2/3</span></div></div>
+        `<div class="upm" role="img" data-nosearch aria-label="${esc(t('Sketch of the module: part A is a progress bar filled to 3 of 5, part B is a square icon box at its right end.','Hình minh họa: phần A là thanh tiến độ đang ở mức 3 trên 5, phần B là ô vuông chứa biểu tượng ở đầu bên phải.'))}">
+           <div class="upm-w bar"><span class="pinl upm-pin">A</span><div class="upm-bar"><div class="upm-fill"></div><span class="upm-n">3/5</span></div></div>
            <div class="upm-w"><span class="pinl upm-pin">B</span><div class="upm-box">${cap(7,'?')}</div></div>
          </div>
-         <p class="upm-cap">${t('Sketch: the bar after level 8 in the example below.','Minh họa: thanh sau màn 8 trong ví dụ bên dưới.')}</p>
+         <p class="upm-cap">${t('Sketch: the bar after level 7 in the example below.','Minh họa: thanh sau màn 7 trong ví dụ bên dưới.')}</p>
          <ul class="parts">
            <li><span class="pinl" data-nosearch>A</span><span><b>${nm('Progress bar','Thanh tiến độ')}</b><span class="d">${t(
              `Green fill, <code>{current}/{total}</code> centered.`,
@@ -942,13 +923,13 @@ function view(l){
       panel(t('Example','Ví dụ'),
         `<div class="lvgrid">
            <div class="lvrow blk"><span class="lvk">${t('Progress bar shows','Thanh tiến độ hiện')}</span><div class="lvcells">${
-             [7,8,9].map((n,i)=>`<span class="fr">${i+1}/3<span class="sr"> ${t('after level','sau màn')} ${n}, </span></span>`).join('')}<span></span></div></div>
+             [5,6,7,8,9].map((n,i)=>`<span class="fr">${i+1}/5<span class="sr"> ${t('after level','sau màn')} ${n}, </span></span>`).join('')}<span></span></div></div>
            <div class="lvrow blk"><span class="lvk">${t('Level','Màn')}</span><div class="lvcells">${
-             [7,8,9,10].map(n=>`<span class="sq">${n}<span class="sr">, </span></span>`).join('')}</div></div>
+             [5,6,7,8,9,10].map(n=>`<span class="sq">${n}<span class="sr">, </span></span>`).join('')}</div></div>
            <div class="lvrow blk"><span class="lvk">${t('New element unlocks','Mở yếu tố mới')}</span><div class="lvcells">${
-             [7,8,9,10].map(n=>n===7||n===10?`<span class="nw">${t('New','Mới')}<span class="sr"> ${t('at level','ở màn')} ${n}, </span></span>`:'<span></span>').join('')}</div></div>
+             [5,6,7,8,9,10].map(n=>n===5||n===10?`<span class="nw">${t('New','Mới')}<span class="sr"> ${t('at level','ở màn')} ${n}, </span></span>`:'<span></span>').join('')}</div></div>
          </div>`+
-        `<p>${t(`${P.el1} unlocks at 7 and ${P.el2} at 10. After level 8 the bar shows “2/3”.`,`${P.el1} mở ở màn 7, ${P.el2} mở ở màn 10. Sau màn 8 thanh hiện “2/3”.`)}</p>`))+
+        `<p>${t(`Elements unlock at 5 and 10. After level 7 the bar shows “3/5”.`,`Yếu tố mở ở màn 5 và 10. Sau màn 7 thanh hiện “3/5”.`)}</p>`))+
 
     sys(nm('Win screen bonus','Thưởng thêm ở màn hình thắng'),
       lead(t(`On the Victory screen, a swinging needle picks a multiplier for the level’s coins. The player watches a rewarded ad to get it.`,
@@ -1035,29 +1016,6 @@ function view(l){
         [t('Score','Điểm'),t(`“Điểm số” with the level score, then a short cheer line.`,`“Điểm số” kèm điểm của màn, rồi một câu khen ngắn.`)],
         [t('Button','Nút'),t(`Green “Cấp độ N” (next level).`,`Nút xanh “Cấp độ N” (màn tiếp theo).`)],
         [t('Coins','Xu'),t(`No coin reward and no bonus gauge seen in the video. The win screen bonus above is kept from the template.`,`Video không thấy thưởng xu hay đồng hồ thưởng thêm. Phần thưởng thêm ở trên giữ theo template.`)]
-      ]),[seen])+
-
-    sys(nm('IQ meter','Chỉ số IQ'),
-      lead(t(`A brain icon with “IQ: N” on the win screen, from level 7.`,`Biểu tượng bộ não kèm “IQ: N” trên màn hình thắng, từ màn 7.`))+
-      kv([
-        [t('Values seen','Giá trị thấy'),t(`Level 7: 80. Level 9: 111. Level 10: 113, counting up to 121.`,`Màn 7: 80. Màn 9: 111. Màn 10: 113, đếm lên 121.`)],
-        [t('Formula','Công thức'),tbd]
-      ]),[seen])+
-
-    sys(nm('Daily Streak','Chuỗi Ngày'),
-      lead(t(`A screen after the level 2 win: a gold winged medal with “1”, “Chuỗi Ngày” and “Chuỗi Chiến Thắng +1, tiếp tục nhé!” (win streak +1, keep going). A row of day slots sits below.`,
-             `Màn hình sau khi thắng màn 2: huy chương vàng có cánh ghi “1”, “Chuỗi Ngày” và “Chuỗi Chiến Thắng +1, tiếp tục nhé!”. Bên dưới là một hàng ô theo ngày.`))+
-      kv([
-        [t('Counts','Cách đếm'),t(`Days with a win in a row. TBD.`,`Số ngày liên tiếp có thắng. Chưa chốt (TBD).`)+' '+inf],
-        [t('Rewards and reset','Thưởng và cách tính lại'),tbd]
-      ]),[seen])+
-
-    sys(nm('Level gift','Quà mốc màn'),
-      lead(t(`A bar at the bottom of the win screen: “Chỉ còn N màn chơi!” (N levels left) with a gift icon.`,`Thanh ở dưới màn hình thắng: “Chỉ còn N màn chơi!” kèm biểu tượng hộp quà.`))+
-      kv([
-        [t('Seen','Thấy'),t(`After the level 10 win a gift box opened, then the bar showed “Chỉ còn 10 màn chơi!”.`,`Sau khi thắng màn 10, một hộp quà được mở, sau đó thanh hiện “Chỉ còn 10 màn chơi!”.`)],
-        [t('Rule','Quy tắc'),t(`One gift every 10 levels.`,`Cứ 10 màn có một hộp quà.`)+' '+inf],
-        [t('Contents','Nội dung quà'),tbd]
       ]),[seen])
 ;
 
@@ -1089,14 +1047,12 @@ function view(l){
   /* PER GAME: one ent per booster: ent(N.key, ul([...]), unlockB(level), demo('key')) */
   B['booster-mechanics']=
     ent(N.bo1,ul([
-      t(`In-game text: “Đốt pháo hoa để xóa ngẫu nhiên một mục tiêu!” (Burn a firework to clear a random target!).`,`Chữ trong game: “Đốt pháo hoa để xóa ngẫu nhiên một mục tiêu!”.`),
       t(`Tap the button: one random piece on the board is cleared. The player does not pick it.`,`Chạm nút: một vật ngẫu nhiên trên màn được dọn. Người chơi không chọn vật.`),
       t(`Which pieces it can pick is TBD (rings only, or ${P.el1} and ${P.el2} too).`,`Vật nào có thể bị chọn chưa chốt (TBD): chỉ vòng, hay cả ${P.el1} và ${P.el2}.`),
       t(`Animation: the rocket flies to the target and bursts, the target shatters.`,`Hiệu ứng: pháo bay tới mục tiêu rồi nổ, mục tiêu vỡ vụn.`)+' '+inf,
       t(`Clearing the target can free its neighbors, as with a normal clear.`,`Dọn mục tiêu có thể gỡ cả các vòng bên cạnh, như khi dọn bình thường.`)+' '+inf
     ]),unlockB(4),demo('firework'))+
     ent(N.bo2,ul([
-      t(`In-game text: “Chạm vào bất kỳ vật nào để đập vỡ nó” (Tap any object to smash it).`,`Chữ trong game: “Chạm vào bất kỳ vật nào để đập vỡ nó”.`),
       t(`Tap the button, then tap any piece: the hammer smashes it at once.`,`Chạm nút, rồi chạm vào vật bất kỳ: búa đập vỡ vật đó ngay.`),
       t(`Any piece can be picked, by the in-game text. Tapping empty space: TBD.`,`Chọn được mọi vật, theo chữ trong game. Chạm vào chỗ trống: chưa chốt (TBD).`),
       t(`Animation: the hammer swings down on the piece, the piece shatters.`,`Hiệu ứng: búa vung xuống vật, vật vỡ vụn.`)+' '+inf
@@ -1173,13 +1129,12 @@ function view(l){
   B['game-concept']=`<p>${t(`A calm, clean puzzle. Warm cream background, nothing else on the board. Rings look like glossy plastic tubes in bright colors, with a light highlight line. A cartoon squirrel mascot holding a green ring cheers on the win screen. The build seen is in Vietnamese. Concept art link: TBD.`,
     `Puzzle nhẹ nhàng, gọn gàng. Nền kem ấm, trên màn không có gì khác. Vòng trông như ống nhựa bóng màu tươi, có đường sáng. Linh vật là chú sóc hoạt hình cầm vòng xanh lá, cổ vũ ở màn hình thắng. Bản build trong video dùng tiếng Việt. Link concept art: chưa có (TBD).`)}</p>`;
 
-  /* color list: [palette class, name]. Only the colors seen in the video */
-  const colors=[[1,t('Red','Đỏ')],[2,t('Blue','Xanh dương')],[3,t('Green (lime and teal shades seen)','Xanh lá (thấy hai tông: xanh mạ và xanh rêu)')],[6,t('Orange','Cam')],[7,t('Purple','Tím')],[8,t('Cyan','Xanh ngọc')]];
+  const colors=[t('Red','Đỏ'),t('Blue','Xanh dương'),t('Green','Xanh lá'),t('Yellow','Vàng'),t('Pink','Hồng'),t('Orange','Cam'),t('Purple','Tím'),t('Cyan','Xanh ngọc')];
   const anim=n=>t('Animation '+n,'Chuyển động '+n);
   B['core-game-object-concept']=
     ent(t('Color list','Bảng màu'),
-      `<p>${t(`Rings, their arms and connectors, and ${P.el1}s share this list. ${P.el2} is always red in the video. Exact color codes: TBD.`,`Vòng, tay, đầu nối và ${P.el1} dùng chung bảng màu này. ${P.el2} trong video luôn màu đỏ. Mã màu chính xác: chưa chốt (TBD).`)}</p>
-       <ol class="colors">${colors.map(([c,n],i)=>`<li>${cap(c,i+1)}<span><span class="sr">${i+1}: </span>${n}</span></li>`).join('')}</ol>`)+
+      `<p>${t(`Rings, their arms and connectors, and ${P.el1}s share this list. ${P.el2} is always red in the video.`,`Vòng, tay, đầu nối và ${P.el1} dùng chung bảng màu này. ${P.el2} trong video luôn màu đỏ.`)}</p>
+       <ol class="colors">${colors.map((c,i)=>`<li>${cap(i+1,i+1)}<span><span class="sr">${i+1}: </span>${c}</span></li>`).join('')}</ol>`)+
     ent(nm('Ring','Vòng'),params([
       [anim(1),t('Rotate: on tap, the ring turns smoothly with its arms. It shows a light inner line while it turns.','Xoay: khi chạm, vòng xoay mượt cùng các tay. Khi đang xoay, vòng hiện đường sáng bên trong.')],
       [anim(2),t('Shatter: the ring breaks into small gem-like shards of its color. They burst out and fade. A praise word pops over the spot.','Vỡ: vòng vỡ thành mảnh nhỏ như đá quý, cùng màu vòng. Mảnh bung ra rồi mờ dần. Một lời khen hiện ở chỗ đó.')],
@@ -1459,10 +1414,15 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('Review fixes','Sửa theo góp ý'),ul([
+        t(`Removed Level progression (1.1), Play screen (HUD) (1.2), and IQ meter, Daily Streak and Level gift (1.3).`,`Bỏ Tiến trình màn chơi (1.1), Màn chơi (HUD) (1.2), và Chỉ số IQ, Chuỗi Ngày, Quà mốc màn (1.3).`),
+        t(`Element unlock progress system now matches the template.`,`Thanh tiến độ mở khóa yếu tố giữ đúng như template.`),
+        t(`Removed the in-game text lines from both boosters. The color list uses the template's 8 colors.`,`Bỏ dòng chữ trong game ở cả hai booster. Bảng màu dùng 8 màu của template.`)
+      ]))+
       ent(t('New document','Tài liệu mới'),ul([
         t(`Created this GDD from the template and the gameplay video of levels 1–10 (Screen_Recording_20261125_095843, 3 min 15 s).`,`Tạo tài liệu này từ template và video gameplay màn 1–10 (Screen_Recording_20261125_095843, 3 phút 15 giây).`),
         t(`Rules are written as seen in the video. Guesses are tagged “to verify”. Numbers not shown in the video are TBD.`,`Luật chơi ghi theo những gì thấy trong video. Phần suy luận được gắn nhãn “cần kiểm chứng”. Con số không có trong video ghi TBD.`),
-        t(`Added the systems seen in the video to 1.3: win screen, IQ meter, Daily Streak, level gift.`,`Thêm vào 1.3 các hệ thống thấy trong video: màn hình thắng, chỉ số IQ, Chuỗi Ngày, quà mốc màn.`),
+        t(`Added the win screen seen in the video to 1.3.`,`Thêm vào 1.3 màn hình thắng thấy trong video.`),
         t(`Left out: RV Slot (no slot row). Remote config, IAP and live ops are kept from the template. The game has 2 boosters, so the Strong booster keys are unused and Revive and Retry with Booster use the ${P.bo2}.`,`Không đưa vào: Ô quảng cáo thưởng (game không có hàng ô). Cấu hình từ xa, IAP và live ops giữ theo template. Game có 2 booster, nên các key booster mạnh chưa dùng, còn Hồi sinh và Chơi lại kèm công cụ dùng ${P.bo2}.`)
       ])));
 
