@@ -1205,9 +1205,9 @@ function view(l){
   B['booster-tutorial']=table(t('Booster tutorial','Hướng dẫn công cụ hỗ trợ'),
     [t('Booster','Công cụ'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn'),t('Free boosters','Số lượt tặng')],
     [
-      [N.bo1,popup('Hint<br>Tap to see which rings can turn!','Gợi ý<br>Chạm để xem vòng nào xoay được!'),lvl('TBD'),lvl(3)],
-      [N.bo2,popup('Saw<br>Tap a connector to cut it!','Cưa<br>Chạm vào một đầu nối để cắt nó!'),lvl('TBD'),lvl(3)],
-      [N.bo3,popup('Remove<br>Tap any ring to remove it!','Xóa vòng<br>Chạm vào vòng bất kỳ để xóa nó!'),lvl('TBD'),lvl(3)]
+      [N.bo1,popup('Hint<br>Highlight movable rings','Gợi ý<br>Làm sáng các vòng xoay được'),lvl('TBD'),lvl(3)],
+      [N.bo2,popup('Saw<br>Remove a connector','Cưa<br>Xóa một đầu nối'),lvl('TBD'),lvl(3)],
+      [N.bo3,popup('Remove<br>Remove a ring','Xóa vòng<br>Xóa một vòng'),lvl('TBD'),lvl(3)]
     ])+
     `<p class="note">${t(`Flow seen at levels 4 and 8 (with the old boosters), kept for all three: the screen dims, the booster icon glows in the middle with “Đã mở khóa trợ lực!”, “Chạm để tiếp tục” (tap to continue). Then a tooltip names the booster and a green “Sử dụng” (Use) button appears. The button is tagged “Miễn phí” (free) for this first use. The badge shows 3 afterwards.`,
       `Diễn biến thấy ở màn 4 và 8 (với booster cũ), dùng cho cả ba: màn hình tối lại, biểu tượng booster sáng ở giữa kèm “Đã mở khóa trợ lực!”, “Chạm để tiếp tục”. Sau đó tooltip ghi tên booster và hiện nút xanh “Sử dụng”. Nút có nhãn “Miễn phí” cho lần dùng đầu. Sau đó chấm đỏ ghi 3.`)}</p>`;
@@ -1526,7 +1526,8 @@ function view(l){
       ent(t('New booster set','Bộ booster mới'),ul([
         t(`Replaced Firework, Hammer and the old Saw. The old ones all removed pieces in almost the same way.`,`Thay Pháo hoa, Búa và Cưa cũ. Các booster cũ đều xóa vật gần như giống nhau.`),
         t(`New set, weakest to strongest: ${P.bo1} (lights up rings that can turn), ${P.bo2} (cuts one connector), ${P.bo3} (removes one ring, hammer animation).`,`Bộ mới, từ yếu đến mạnh: ${P.bo1} (làm sáng vòng xoay được), ${P.bo2} (cắt một đầu nối), ${P.bo3} (xóa một vòng, hiệu ứng búa).`),
-        t(`Unlock levels are TBD. Revive and Retry with Booster now use ${P.bo3}.`,`Màn mở khóa chưa chốt (TBD). Hồi sinh và Chơi lại kèm công cụ giờ dùng ${P.bo3}.`)
+        t(`Unlock levels are TBD. Revive and Retry with Booster now use ${P.bo3}.`,`Màn mở khóa chưa chốt (TBD). Hồi sinh và Chơi lại kèm công cụ giờ dùng ${P.bo3}.`),
+        t(`Booster tutorial popups (2.4): “Highlight movable rings”, “Remove a connector”, “Remove a ring”.`,`Popup hướng dẫn booster (2.4): “Làm sáng các vòng xoay được”, “Xóa một đầu nối”, “Xóa một vòng”.`)
       ]))+
       ent(t('Main game mechanics','Cơ chế chính'),ul([
         t(`Ring: tap and move to rotate. A ring can turn a full 360° when nothing holds it back.`,`Vòng: chạm và di chuyển để xoay. Vòng xoay được trọn 360° nếu không có gì cản.`),
