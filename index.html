@@ -1362,10 +1362,10 @@ function view(l){
     [t('Gold Pack','Gói vàng')],
     ['1,000 Gold',pid('coins_1K'),'1,000',dash,dash,dash,'$1.99'],
     ['5,000 Gold',pid('coins_5K'),'5,000',dash,dash,dash,'$4.99'],
-    ['10,000 Gold',pid('coins_10K'),'10,000',dash,dash,dash,'$9.99'],
-    ['25,000 Gold',pid('coins_25K'),'25,000',dash,dash,dash,'$24.99'],
-    ['50,000 Gold',pid('coins_50K'),'50,000',dash,dash,dash,'$49.99'],
-    ['100,000 Gold',pid('coins_100K'),'100,000',dash,dash,dash,'$99.99']
+    ['10,000 Gold',pid('coins_10K'),'10,000',dash,dash,dash,'$8.99'],
+    ['25,000 Gold',pid('coins_25K'),'25,000',dash,dash,dash,'$19.99'],
+    ['50,000 Gold',pid('coins_50K'),'50,000',dash,dash,dash,'$34.99'],
+    ['100,000 Gold',pid('coins_100K'),'100,000',dash,dash,dash,'$69.99']
   ];
   const NUMC={2:1,6:1};
   const packHead=[t('Pack','Gói'),'ID',t('Gold','Vàng'),t('Boosters','Công cụ hỗ trợ'),t('Unlimited lives','Tim vô hạn'),t('Other benefit','Lợi ích khác'),t('Price (USD)','Giá (USD)')];
@@ -1526,6 +1526,9 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('Gold Pack prices','Giá Gói vàng'),ul([
+        t(`New prices: 1,000 Gold $1.99, 5,000 $4.99, 10,000 $8.99, 25,000 $19.99, 50,000 $34.99, 100,000 $69.99.`,`Giá mới: 1.000 Vàng $1.99, 5.000 $4.99, 10.000 $8.99, 25.000 $19.99, 50.000 $34.99, 100.000 $69.99.`)
+      ]))+
       ent(t('Straight Bar and Pin','Thanh thẳng và Chốt'),ul([
         t(`Link Bar is now ${P.el1}: same lock logic as a ring, straight or bent in 1 or more segments.`,`Link Bar đổi thành ${P.el1}: logic khóa giống vòng, thẳng hoặc gập khúc 1 hay nhiều đoạn.`),
         t(`${P.el2} stands on its own, locks rings and bars like a ring, and shatters by itself once it locks nothing.`,`${P.el2} đứng riêng, khóa vòng và thanh như vòng, và tự vỡ khi không còn khóa gì.`),
