@@ -1195,8 +1195,8 @@ function view(l){
   B['element-tutorial']=table(t('Element tutorial','Hướng dẫn yếu tố đặc biệt'),
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
-      [N.el1,tbd+' '+t('(no popup seen at level 7)','(không thấy popup ở màn 7)'),lvl(7)],
-      [N.el2,tbd+' '+t('(no popup seen at level 10)','(không thấy popup ở màn 10)'),lvl(10)],
+      [N.el1,popup('Link bar!<br>Free both ends to break it.','Thanh nối!<br>Gỡ cả hai đầu để phá thanh nối.')+' '+t('(proposed, no popup seen at level 7)','(đề xuất, không thấy popup ở màn 7)'),lvl(7)],
+      [N.el2,popup('Pin!<br>Turn the gap to the clamp to drop the pin.','Chốt treo!<br>Xoay chỗ hở tới kẹp để thả chốt.')+' '+t('(proposed, no popup seen at level 10)','(đề xuất, không thấy popup ở màn 10)'),lvl(10)],
       [N.el3,popup('Locked ring!<br>Break the piece with the key first.','Vòng khóa!<br>Phá vật giữ chìa khóa trước.'),lvl('TBD')],
       [N.el4,popup('Gear rings!<br>Turn one, its partner turns the other way.','Bánh răng!<br>Xoay một vòng, vòng kia xoay ngược chiều.'),lvl('TBD')]
     ]);
@@ -1527,6 +1527,7 @@ function view(l){
         t(`Replaced Firework, Hammer and the old Saw. The old ones all removed pieces in almost the same way.`,`Thay Pháo hoa, Búa và Cưa cũ. Các booster cũ đều xóa vật gần như giống nhau.`),
         t(`New set, weakest to strongest: ${P.bo1} (lights up rings that can turn), ${P.bo2} (cuts one connector), ${P.bo3} (removes one ring, hammer animation).`,`Bộ mới, từ yếu đến mạnh: ${P.bo1} (làm sáng vòng xoay được), ${P.bo2} (cắt một đầu nối), ${P.bo3} (xóa một vòng, hiệu ứng búa).`),
         t(`Unlock levels are TBD. Revive and Retry with Booster now use ${P.bo3}.`,`Màn mở khóa chưa chốt (TBD). Hồi sinh và Chơi lại kèm công cụ giờ dùng ${P.bo3}.`),
+        t(`Element tutorial popups (2.3): added proposed text for ${P.el1} and ${P.el2}.`,`Popup hướng dẫn yếu tố (2.3): thêm chữ đề xuất cho ${P.el1} và ${P.el2}.`),
         t(`Booster tutorial popups (2.4): “Highlight movable rings”, “Remove a connector”, “Remove a ring”.`,`Popup hướng dẫn booster (2.4): “Làm sáng các vòng xoay được”, “Xóa một đầu nối”, “Xóa một vòng”.`)
       ]))+
       ent(t('Main game mechanics','Cơ chế chính'),ul([
