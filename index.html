@@ -630,12 +630,12 @@ const DEMOS={
       ...shardTracks('shA',2.15),...shardTracks('shB',2.2),
       ...praiseTracks('pr',2.2)
     ]},
-  /* element: a link bar holds two rings by its grey sleeves; it shatters only when both ends are free */
-  linkBar:{D:6.4,
+  /* element: a straight bar locks like a ring; here a bar bent in 3 segments hooks into two rings and shatters once both ends are free */
+  straightBar:{D:6.4,
     svg:()=>`<g class="rL">${bb(55,124,32)}${ringP(55,124,28,6,90,70)}</g>`+
       `<g class="rR">${bb(145,124,32)}${ringP(145,124,28,2,90,70)}</g>`+
-      `<g class="bar"><path d="M55 96V52H145V96" fill="none" class="s3" stroke-width="6" stroke-linejoin="round"/>`+
-      `<rect x="48" y="88" width="14" height="14" rx="3.5" fill="${RGREY}"/><rect x="138" y="88" width="14" height="14" rx="3.5" fill="${RGREY}"/></g>`+
+      `<g class="bar"><path d="M55 96V52H145V96" fill="none" class="s3" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`+
+      `<path d="M58 92V55H142V92" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.8" stroke-linejoin="round"/></g>`+
       tap(55,150)+`<circle class="tap2 tap" cx="145" cy="150" r="15" style="opacity:0"/>`+
       shards(100,60,3,'shBar',12,40)+shards(55,124,6,'shL')+shards(145,124,2,'shR')+praise(100,30,'Excellent!','pr'),
     tracks:()=>[
@@ -644,17 +644,18 @@ const DEMOS={
       fadeOut('.bar',3.3),...shardTracks('shBar',3.3),...praiseTracks('pr',3.35),
       fadeOut('.rL',3.9),fadeOut('.rR',3.9),...shardTracks('shL',3.9),...shardTracks('shR',3.95)
     ]},
-  /* element: a pin hangs from a ring by its clamp; turning the ring until its gap reaches the clamp frees the pin */
-  pin:{D:5.4,
-    svg:()=>`<g class="rP">${bb(100,84,38)}${ringP(100,84,34,8,270,64)}</g>`+
-      `<g class="pinx"><rect x="92" y="104" width="16" height="64" rx="8" class="f1"/><rect x="95" y="108" width="4" height="52" rx="2" fill="#fff" fill-opacity=".35"/>`+
-      `<rect x="88" y="112" width="24" height="12" rx="3" fill="${RGREY}"/></g>`+
-      tap(100,50)+shards(100,140,1,'shP',10,30)+shards(100,84,8,'shR')+praise(100,190,'Great!','pr'),
+  /* element: a pin stands on its own and locks every ring that passes over it; once it locks nothing it shatters by itself */
+  pin:{D:6,
+    svg:()=>`<g class="rA">${bb(62,100,32)}${ringP(62,100,28,7,270,64)}</g>`+
+      `<g class="rB">${bb(138,100,32)}${ringP(138,100,28,2,90,64)}</g>`+
+      `<g class="pinx"><circle cx="100" cy="100" r="10" class="f1"/><circle cx="97" cy="97" r="3.2" fill="#fff" fill-opacity=".5"/></g>`+
+      tap(62,140)+`<circle class="tap2 tap" cx="138" cy="140" r="15" style="opacity:0"/>`+
+      shards(100,100,1,'shP',10,22)+shards(62,100,7,'shA')+shards(138,100,2,'shB')+praise(100,40,'Great!','pr'),
     tracks:()=>[
-      ...tapTracks(.6),spin('.rP',.9,1.9,180),
-      ['.pinx','transform',[[2.0,'translate(0px,0px)'],[2.35,'translate(0px,10px)']]],
-      fadeOut('.pinx',2.3),...shardTracks('shP',2.35),...praiseTracks('pr',2.4),
-      fadeOut('.rP',2.9),...shardTracks('shR',2.9)
+      ...tapTracks(.5),spin('.rA',.8,1.6,90),
+      ...tapTracks(2.0,'.tap2'),spin('.rB',2.3,3.1,90),
+      fadeOut('.pinx',3.3),...shardTracks('shP',3.3),...praiseTracks('pr',3.35),
+      fadeOut('.rA',3.9),fadeOut('.rB',3.9),...shardTracks('shA',3.9),...shardTracks('shB',3.95)
     ]},
   /* element: the locked ring will not turn until the piece holding its key shatters */
   lockedRing:{D:7,
@@ -845,11 +846,11 @@ function view(l){
 
   /* names reused across sections */
   const N={
-    el1:nm('Link Bar','Thanh nối'),el2:nm('Pin','Chốt treo'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
+    el1:nm('Straight Bar','Thanh thẳng'),el2:nm('Pin','Chốt'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
     bo1:nm('Hint','Gợi ý'),bo2:nm('Saw','Cưa'),bo3:nm('Remove','Xóa vòng')
   };
   const P={ /* plain names for running text and tables */
-    el1:t('Link Bar','Thanh nối'),el2:t('Pin','Chốt treo'),el3:t('Locked Ring','Vòng khóa'),el4:t('Gear Ring','Bánh răng'),
+    el1:t('Straight Bar','Thanh thẳng'),el2:t('Pin','Chốt'),el3:t('Locked Ring','Vòng khóa'),el4:t('Gear Ring','Bánh răng'),
     bo1:t('Hint','Gợi ý'),bo2:t('Saw','Cưa'),bo3:t('Remove','Xóa vòng')
   };
   const withEl=t('With elements','Khi gặp yếu tố đặc biệt');
@@ -860,8 +861,8 @@ function view(l){
   /* PER GAME: demo captions, one per DEMOS key */
   const DCAP={
     rotate:t('Tap and move the orange ring. It turns until its gap reaches the blue connector, the link breaks and both rings shatter.','Chạm và di chuyển vòng cam. Vòng xoay tới khi chỗ hở gặp đầu nối xanh, liên kết bị tách và cả hai vòng vỡ.'),
-    linkBar:t('Turn both rings so their gaps pass the grey sleeves. Once both ends are free, the bar shatters, then the rings.','Xoay cả hai vòng cho chỗ hở đi qua khớp xám. Khi cả hai đầu được gỡ, thanh nối vỡ, sau đó tới các vòng.'),
-    pin:t('Turn the ring until its gap reaches the clamp. The pin drops and shatters, then the ring.','Xoay vòng tới khi chỗ hở gặp kẹp. Chốt rơi ra và vỡ, sau đó tới vòng.'),
+    straightBar:t('The bar locks into both rings like a ring would. Turn each ring until its gap passes the bar. Once the bar locks nothing and nothing locks it, it shatters.','Thanh khóa vào hai vòng giống như một vòng. Xoay từng vòng cho chỗ hở đi qua thanh. Khi thanh không còn khóa và không bị khóa, thanh vỡ.'),
+    pin:t('The red pin stands on its own and locks both rings. Turn each ring until its gap passes the pin. The pin locks nothing now, so it shatters by itself.','Chốt đỏ đứng riêng và khóa cả hai vòng. Xoay từng vòng cho chỗ hở đi qua chốt. Chốt không còn khóa gì nên tự vỡ.'),
     lockedRing:t('A tap on the locked ring only shakes it. The yellow ring turns, shatters, and its key flies to the lock. Now the blue ring turns.','Chạm vòng khóa thì vòng chỉ rung. Vòng vàng xoay rồi vỡ, chìa khóa bay tới ổ khóa. Lúc này vòng xanh mới xoay được.'),
     gearRing:t('Tap the orange gear: it turns one way and the green gear turns the other way. The green gap frees the purple ring.','Chạm bánh răng cam: nó xoay một chiều, bánh răng xanh xoay ngược lại. Chỗ hở của vòng xanh gỡ được vòng tím.'),
     hint:t('Tap Hint. The rings that can turn now light up. The locked ring stays dark.','Chạm Gợi ý. Các vòng đang xoay được sáng lên. Vòng khóa không sáng.'),
@@ -1092,20 +1093,21 @@ function view(l){
   /* PER GAME: one ent per element: ent(N.key, ul([...rules]), unlock(level), demo('key')) */
   B['elements-mechanics']=
     ent(N.el1,ul([
-      t(`Between 2 rings. A rigid bar, straight or bent (L or ⊓).`,`Nằm giữa 2 vòng. Thanh cứng, thẳng hoặc gập (hình L hoặc ⊓).`),
-      t(`A grey sleeve at each end wraps the arc of a ring.`,`Mỗi đầu có một khớp xám ôm cung của một vòng.`),
-      t(`It does not turn. Tapping the bar: TBD.`,`Thanh không xoay. Chạm vào thanh: TBD.`),
-      t(`While an end is on a ring, that ring is held in place.`,`Đầu nào còn trên vòng thì vòng đó còn bị giữ.`),
-      t(`Free one end: turn its ring until the gap passes the sleeve.`,`Gỡ một đầu: xoay vòng cho chỗ hở đi qua khớp.`),
-      t(`Both ends free: the bar shatters.`,`Gỡ cả 2 đầu: thanh vỡ.`)+' '+inf,
-      fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
-    ]),unlock(7),demo('linkBar'))+
+      t(`A straight bar, or a bar bent into 1 or more segments.`,`Thanh thẳng, hoặc gập khúc thành 1 hay nhiều đoạn.`),
+      t(`Same lock logic as a ring: it can lock rings and other bars, and they can lock it.`,`Logic khóa giống vòng: thanh khóa được vòng và thanh khác, và cũng bị chúng khóa.`),
+      t(`A ring frees the bar when the ring turns its gap past the bar.`,`Vòng xoay chỗ hở qua thanh thì thanh được gỡ khỏi vòng đó.`),
+      t(`Can the player move the bar: TBD.`,`Người chơi có di chuyển được thanh không: TBD.`),
+      t(`No locks left: the bar shatters, like a ring.`,`Hết khóa: thanh vỡ, như vòng.`),
+      t(`Replaces the Link Bar with grey sleeves seen at level 7.`,`Thay cho Link Bar có khớp xám thấy ở màn 7.`),
+      fsLine(`if the bar cannot move, a bar locked only by a ${P.el2} or another bar can get stuck.`,`nếu thanh không di chuyển được, thanh chỉ bị ${P.el2} hoặc thanh khác khóa có thể bị kẹt.`)
+    ]),unlock(7),demo('straightBar'))+
     ent(N.el2,ul([
-      t(`Hangs from the arc of a ring. A red capsule with a grey clamp.`,`Treo trên cung của một vòng. Viên con nhộng đỏ có kẹp xám.`),
-      t(`It does not turn. While it hangs on, its ring cannot clear.`,`Chốt không xoay. Còn chốt thì vòng chưa được dọn.`)+' '+inf,
-      t(`Turn the gap to the clamp: the pin drops and shatters.`,`Xoay chỗ hở tới kẹp: chốt rơi ra và vỡ.`),
-      t(`Seen once, at level 10.`,`Thấy 1 lần, ở màn 10.`),
-      fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
+      t(`A pin that stands on its own. Not attached to any ring or bar.`,`Chốt đứng riêng. Không gắn vào vòng hay thanh nào.`),
+      t(`It locks rings and bars like a ring does. A piece it locks cannot clear.`,`Chốt khóa vòng và thanh giống như vòng. Vật bị chốt khóa chưa được dọn.`),
+      t(`Free a ring: turn its gap past the pin.`,`Gỡ vòng: xoay chỗ hở qua chốt.`),
+      t(`The pin does not turn.`,`Chốt không xoay.`),
+      t(`Locks nothing: the pin shatters by itself.`,`Không còn khóa vật nào: chốt tự vỡ.`),
+      fsLine(`see ${P.el1}.`,`xem ${P.el1}.`)
     ]),unlock(10),demo('pin'))+
     ent(N.el3,ul([
       t(`A ring with a padlock. A tap only shakes it, it does not turn.`,`Vòng có ổ khóa. Chạm vào chỉ rung, không xoay.`),
@@ -1124,7 +1126,8 @@ function view(l){
       fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
     ]),unlock('TBD'),demo('gearRing'))+
     ent(nm('Fail-safe','Cơ chế chống kẹt'),ul([
-      t(`No element counts down on player actions. Rings can be turned any number of times. The only stuck case is the ${P.el3} below.`,`Không yếu tố nào đếm ngược theo thao tác. Vòng xoay được không giới hạn. Trường hợp kẹt duy nhất là ${P.el3} bên dưới.`),
+      t(`No element counts down on player actions. Rings can be turned any number of times. The stuck cases are below.`,`Không yếu tố nào đếm ngược theo thao tác. Vòng xoay được không giới hạn. Các trường hợp kẹt ở bên dưới.`),
+      t(`Stuck: a ${P.el1} locked only by a ${P.el2} or another bar, if bars cannot move (TBD). Level design must avoid this. If it still happens, that lock breaks by itself.`,`Kẹt: ${P.el1} chỉ bị ${P.el2} hoặc thanh khác khóa, nếu thanh không di chuyển được (TBD). Thiết kế màn phải tránh trường hợp này. Nếu vẫn xảy ra, khóa đó tự vỡ.`),
       t(`Stuck: the piece holding the key can only be freed by turning the ${P.el3}. Level design must avoid this. If it still happens, the lock opens by itself.`,`Kẹt: vật giữ chìa khóa chỉ gỡ được bằng cách xoay ${P.el3}. Thiết kế màn phải tránh trường hợp này. Nếu vẫn xảy ra, ổ khóa tự mở.`),
       t(`If a move limit is added later (see the lose condition in 1.1), define the stuck cases here. TBD.`,`Nếu sau này thêm giới hạn move (xem điều kiện thua ở 1.1), cần định nghĩa trường hợp kẹt ở đây. Chưa chốt (TBD).`)
     ])).replace('<div class="ent">','<div class="ent" id="lock-fail-safe">');
@@ -1133,7 +1136,7 @@ function view(l){
   B['booster-mechanics']=
     ent(N.bo1,ul([
       t(`Tap the button: every ring that can turn right now lights up.`,`Chạm nút: mọi vòng đang xoay được sẽ sáng lên.`),
-      t(`Rings that cannot turn stay dark: a ${P.el3} that is still locked, or a ring held in place by a ${P.el1}.`,`Vòng không xoay được thì không sáng: ${P.el3} còn khóa, hoặc vòng đang bị ${P.el1} giữ.`),
+      t(`Rings that cannot turn stay dark: a ${P.el3} that is still locked.`,`Vòng không xoay được thì không sáng: ${P.el3} còn khóa.`),
       t(`It removes nothing. The player still makes every move.`,`Không xóa gì. Người chơi vẫn tự xoay.`),
       t(`The light stays until the next move. TBD.`,`Đèn sáng tới lần xoay tiếp theo. Chưa chốt (TBD).`),
       t(`Animation: a yellow glow pulses around each movable ring.`,`Hiệu ứng: viền vàng nhấp nháy quanh mỗi vòng xoay được.`)
@@ -1194,8 +1197,8 @@ function view(l){
   B['element-tutorial']=table(t('Element tutorial','Hướng dẫn yếu tố đặc biệt'),
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
-      [N.el1,popup('Free both ends of the bar<br>to break it.','Gỡ cả hai đầu thanh nối<br>để phá thanh.'),lvl(7)],
-      [N.el2,popup('Turn the gap to the clamp<br>to drop the pin.','Xoay chỗ hở tới kẹp<br>để thả chốt.'),lvl(10)],
+      [N.el1,popup('Free the bar from every ring<br>to break it.','Gỡ thanh khỏi mọi vòng<br>để phá thanh.'),lvl(7)],
+      [N.el2,popup('Free every ring from the pin<br>to break it.','Gỡ mọi vòng khỏi chốt<br>để phá chốt.'),lvl(10)],
       [N.el3,popup('Break the piece with the key<br>to unlock the ring.','Phá vật giữ chìa khóa<br>để mở vòng khóa.'),lvl('TBD')],
       [N.el4,popup('Turn one gear,<br>the other turns the opposite way.','Xoay một bánh răng,<br>bánh kia xoay ngược chiều.'),lvl('TBD')]
     ])+
@@ -1235,7 +1238,7 @@ function view(l){
   const anim=n=>t('Animation '+n,'Chuyển động '+n);
   B['core-game-object-concept']=
     ent(t('Color list','Bảng màu'),
-      `<p>${t(`Rings, their arms and connectors, and ${P.el1}s share this list. ${P.el2} is always red in the video.`,`Vòng, tay, đầu nối và ${P.el1} dùng chung bảng màu này. ${P.el2} trong video luôn màu đỏ.`)}</p>
+      `<p>${t(`Rings, their arms and connectors, and ${P.el1}s share this list. ${P.el2} is always red.`,`Vòng, tay, đầu nối và ${P.el1} dùng chung bảng màu này. ${P.el2} luôn màu đỏ.`)}</p>
        <ol class="colors">${colors.map((c,i)=>`<li>${cap(i+1,i+1)}<span><span class="sr">${i+1}: </span>${c}</span></li>`).join('')}</ol>`)+
     ent(nm('Ring','Vòng'),params([
       [anim(1),t('Rotate: on tap, the ring turns smoothly with its arms. It shows a light inner line while it turns.','Xoay: khi chạm, vòng xoay mượt cùng các tay. Khi đang xoay, vòng hiện đường sáng bên trong.')],
@@ -1245,8 +1248,8 @@ function view(l){
 
   const an=t('Animation','Chuyển động'),look=t('Look','Hình ảnh');
   B['element-object-concept']=
-    ent(N.el1,params([[look,t('Colored tube, straight or bent, with grey metal sleeves at the ends.','Ống màu, thẳng hoặc gập, hai đầu có khớp kim loại xám.')],[an,t('Shatters into shards of its color, like a ring.','Vỡ thành mảnh cùng màu, giống vòng.')+' '+inf]]))+
-    ent(N.el2,params([[look,t('Red glossy capsule with a grey metal clamp.','Viên con nhộng đỏ bóng, có kẹp kim loại xám.')],[an,t('Drops off the ring and shatters into red shards.','Rơi khỏi vòng và vỡ thành mảnh đỏ.')]]))+
+    ent(N.el1,params([[look,t('Glossy colored tube like a ring, straight or bent in 1 or more segments. No sleeves.','Ống màu bóng như vòng, thẳng hoặc gập khúc 1 hay nhiều đoạn. Không có khớp.')],[an,t('Shatters into shards of its color, like a ring.','Vỡ thành mảnh cùng màu, giống vòng.')]]))+
+    ent(N.el2,params([[look,t('Red glossy round pin with a white highlight, standing on its own.','Chốt tròn đỏ bóng, có điểm sáng trắng, đứng riêng.')],[an,t('Locks nothing: pops and shatters into red shards.','Hết khóa: bật lên rồi vỡ thành mảnh đỏ.')]]))+
     ent(N.el3,params([[look,t('A normal ring with a grey padlock on its arc. The key is a small gold key stuck on another piece.','Vòng bình thường có ổ khóa xám trên cung. Chìa khóa là chìa vàng nhỏ gắn trên vật khác.')],[an,t('Tap while locked: the ring shakes. Key holder shatters: the key flies to the lock, the lock pops open and fades.','Chạm khi còn khóa: vòng rung. Vật giữ chìa vỡ: chìa bay tới ổ khóa, ổ khóa bật mở rồi mờ đi.')]]))+
     ent(N.el4,params([[look,t('A ring with a toothed outer rim in the same color.','Vòng có vành răng ở mép ngoài, cùng màu vòng.')],[an,t('Meshed gears turn together in opposite directions, teeth rolling against each other.','Các bánh răng ăn khớp cùng xoay ngược chiều, răng lăn vào nhau.')]]));
 
@@ -1271,8 +1274,8 @@ function view(l){
     ['Link Break','core',t('A connector comes off a ring','Đầu nối tuột khỏi vòng'),1],
     ['Ring Shatter','core',t('A piece shatters','Một vật vỡ vụn'),2],
     ['Praise','core',t('Great! / Excellent! / Amazing! / Incredible! pops','Lời khen Great! / Excellent! / Amazing! / Incredible! hiện lên'),0],
-    ['Link Bar Break','el',t(`A ${P.el1} shatters`,`${P.el1} vỡ`),2],
-    ['Pin Drop','el',t(`A ${P.el2} drops off its ring`,`${P.el2} rơi khỏi vòng`),2],
+    ['Bar Break','el',t(`A ${P.el1} shatters`,`${P.el1} vỡ`),2],
+    ['Pin Break','el',t(`A ${P.el2} that locks nothing shatters`,`${P.el2} hết khóa và tự vỡ`),2],
     ['Lock Shake','el',t(`The player taps a ${P.el3} that is still locked`,`Người chơi chạm ${P.el3} khi còn khóa`),1],
     ['Lock Open','el',t(`A key reaches its lock and the ${P.el3} opens`,`Chìa khóa tới ổ khóa và ${P.el3} mở`),2],
     ['Gear Turn','el',t(`Meshed ${P.el4}s turn together`,`Các ${P.el4} ăn khớp cùng xoay`),1],
@@ -1523,6 +1526,11 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 25, 2026','25/11/2026'),
+      ent(t('Straight Bar and Pin','Thanh thẳng và Chốt'),ul([
+        t(`Link Bar is now ${P.el1}: same lock logic as a ring, straight or bent in 1 or more segments.`,`Link Bar đổi thành ${P.el1}: logic khóa giống vòng, thẳng hoặc gập khúc 1 hay nhiều đoạn.`),
+        t(`${P.el2} stands on its own, locks rings and bars like a ring, and shatters by itself once it locks nothing.`,`${P.el2} đứng riêng, khóa vòng và thanh như vòng, và tự vỡ khi không còn khóa gì.`),
+        t(`New demos, popups, looks and SFX. Added a possible stuck case to Fail-safe.`,`Demo, popup, hình ảnh và SFX mới. Thêm trường hợp có thể kẹt vào Cơ chế chống kẹt.`)
+      ]))+
       ent(t('New booster set','Bộ booster mới'),ul([
         t(`Replaced Firework, Hammer and the old Saw. The old ones all removed pieces in almost the same way.`,`Thay Pháo hoa, Búa và Cưa cũ. Các booster cũ đều xóa vật gần như giống nhau.`),
         t(`New set, weakest to strongest: ${P.bo1} (lights up rings that can turn), ${P.bo2} (cuts one connector), ${P.bo3} (removes one ring, hammer animation).`,`Bộ mới, từ yếu đến mạnh: ${P.bo1} (làm sáng vòng xoay được), ${P.bo2} (cắt một đầu nối), ${P.bo3} (xóa một vòng, hiệu ứng búa).`),
