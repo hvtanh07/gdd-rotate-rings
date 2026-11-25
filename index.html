@@ -1092,36 +1092,35 @@ function view(l){
   /* PER GAME: one ent per element: ent(N.key, ul([...rules]), unlock(level), demo('key')) */
   B['elements-mechanics']=
     ent(N.el1,ul([
-      t(`A rigid colored bar, straight or bent (L or ⊓ shape), with a grey metal sleeve at each end. Each sleeve wraps the arc of a ring.`,
-        `Thanh cứng có màu, thẳng hoặc gập (hình L hoặc ⊓), mỗi đầu có một khớp kim loại xám. Mỗi khớp ôm lấy cung của một vòng.`),
-      t(`It does not turn. What a tap on the bar does is TBD (not seen).`,`Thanh không xoay. Chạm vào thanh thì làm gì chưa chốt (TBD, không thấy trong video).`),
-      t(`An end lets go when its ring turns so that its gap passes the sleeve.`,`Một đầu được gỡ khi vòng của nó xoay cho chỗ hở đi qua khớp.`),
-      t(`While any end is still on a ring, the bar holds that ring in place.`,`Khi còn đầu nào trên vòng, thanh vẫn giữ vòng đó.`),
-      t(`Both ends free: the bar shatters like a ring.`,`Cả hai đầu được gỡ: thanh vỡ như một vòng.`)+' '+inf,
+      t(`Between 2 rings. A rigid bar, straight or bent (L or ⊓).`,`Nằm giữa 2 vòng. Thanh cứng, thẳng hoặc gập (hình L hoặc ⊓).`),
+      t(`A grey sleeve at each end wraps the arc of a ring.`,`Mỗi đầu có một khớp xám ôm cung của một vòng.`),
+      t(`It does not turn. Tapping the bar: TBD.`,`Thanh không xoay. Chạm vào thanh: TBD.`),
+      t(`While an end is on a ring, that ring is held in place.`,`Đầu nào còn trên vòng thì vòng đó còn bị giữ.`),
+      t(`Free one end: turn its ring until the gap passes the sleeve.`,`Gỡ một đầu: xoay vòng cho chỗ hở đi qua khớp.`),
+      t(`Both ends free: the bar shatters.`,`Gỡ cả 2 đầu: thanh vỡ.`)+' '+inf,
       fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
     ]),unlock(7),demo('linkBar'))+
     ent(N.el2,ul([
-      t(`A red glossy capsule with a grey clamp. It hangs from the arc of a ring. Seen once, at level 10, under the bottom ring.`,
-        `Viên con nhộng đỏ bóng có kẹp xám. Nó treo trên cung của một vòng. Thấy một lần, ở màn 10, dưới vòng cuối cùng.`),
-      t(`It does not turn. It keeps its ring linked, so the ring cannot clear while the pin is on it.`,`Chốt không xoay. Chốt giữ liên kết với vòng, nên vòng chưa được dọn khi chốt còn trên đó.`)+' '+inf,
-      t(`Turn the ring until its gap reaches the clamp: the pin drops off and shatters (“Great!” in the video).`,`Xoay vòng tới khi chỗ hở gặp kẹp: chốt rơi ra và vỡ (video hiện “Great!”).`),
+      t(`Hangs from the arc of a ring. A red capsule with a grey clamp.`,`Treo trên cung của một vòng. Viên con nhộng đỏ có kẹp xám.`),
+      t(`It does not turn. While it hangs on, its ring cannot clear.`,`Chốt không xoay. Còn chốt thì vòng chưa được dọn.`)+' '+inf,
+      t(`Turn the gap to the clamp: the pin drops and shatters.`,`Xoay chỗ hở tới kẹp: chốt rơi ra và vỡ.`),
+      t(`Seen once, at level 10.`,`Thấy 1 lần, ở màn 10.`),
       fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
     ]),unlock(10),demo('pin'))+
     ent(N.el3,ul([
-      t(`A ring with a padlock on it. It cannot turn: a tap only shakes it.`,`Vòng có gắn ổ khóa. Vòng không xoay được: chạm vào chỉ làm vòng rung.`),
-      t(`Its key sits on another piece in the level (a ring or a ${P.el1}).`,`Chìa khóa nằm trên một vật khác trong màn (một vòng hoặc một ${P.el1}).`),
-      t(`When the piece holding the key shatters, the key flies to the lock and the lock opens. From then on it is a normal ring.`,`Khi vật giữ chìa khóa vỡ, chìa khóa bay tới ổ khóa và ổ khóa mở. Từ đó nó là vòng bình thường.`),
-      t(`While locked, it still clears if its neighbors release all its links.`,`Khi còn khóa, vòng vẫn được dọn nếu các vòng bên cạnh nhả hết liên kết của nó.`),
-      t(`The player must plan the order: free the key holder first.`,`Người chơi phải tính thứ tự: gỡ vật giữ chìa khóa trước.`),
-      t(`Boosters: ${P.bo1} does not light a locked ring. ${P.bo3} on the key holder also releases the key. ${P.bo3} on the locked ring clears it, lock and all.`,`Booster: ${P.bo1} không làm sáng vòng còn khóa. ${P.bo3} lên vật giữ chìa cũng nhả chìa. ${P.bo3} lên vòng khóa dọn luôn cả vòng lẫn ổ khóa.`),
-      fsLine(`the key holder can only be freed by turning the locked ring.`,`vật giữ chìa khóa chỉ gỡ được bằng cách xoay vòng khóa.`)
+      t(`A ring with a padlock. A tap only shakes it, it does not turn.`,`Vòng có ổ khóa. Chạm vào chỉ rung, không xoay.`),
+      t(`Its key sits on another piece (a ring or a ${P.el1}).`,`Chìa khóa nằm trên vật khác (một vòng hoặc ${P.el1}).`),
+      t(`Key holder shatters: the key flies to the lock and opens it. It is a normal ring from then on.`,`Vật giữ chìa vỡ: chìa bay tới ổ khóa và mở khóa. Từ đó là vòng thường.`),
+      t(`Still locked but no links left: it clears as usual.`,`Còn khóa nhưng hết liên kết: vẫn được dọn như thường.`),
+      t(`Boosters: ${P.bo1} does not light it while locked. ${P.bo3} on the key holder releases the key. ${P.bo3} on the locked ring clears it.`,`Booster: ${P.bo1} không làm sáng vòng còn khóa. ${P.bo3} lên vật giữ chìa thì nhả chìa. ${P.bo3} lên vòng khóa thì dọn luôn vòng.`),
+      fsLine(`the key holder can only be freed by turning the locked ring.`,`vật giữ chìa chỉ gỡ được bằng cách xoay vòng khóa.`)
     ]),unlock('TBD'),demo('lockedRing'))+
     ent(N.el4,ul([
-      t(`A ring with teeth on its outer edge. Two or more gear rings sit next to each other with their teeth meshed.`,`Vòng có răng ở mép ngoài. Hai hoặc nhiều bánh răng nằm cạnh nhau, răng ăn khớp.`),
-      t(`Tap one: it turns one step, and every gear meshed with it turns the same step in the opposite direction.`,`Chạm một vòng: vòng đó xoay một bước, mọi bánh răng ăn khớp với nó xoay cùng bước theo chiều ngược lại.`),
-      t(`Each move changes two gaps at once, so a move that helps one gear can block the other.`,`Mỗi lần xoay đổi hai chỗ hở cùng lúc, nên lần xoay có lợi cho vòng này có thể chặn vòng kia.`),
-      t(`Meshing is not a link. A gear ring clears when it has no connector links left, like any ring.`,`Ăn khớp không phải là liên kết. Bánh răng được dọn khi hết liên kết đầu nối, như mọi vòng.`),
-      t(`Harder to read than other elements, so it unlocks last.`,`Khó đọc hơn các yếu tố khác, nên mở sau cùng.`),
+      t(`A ring with teeth on its outer edge. Gear rings side by side mesh.`,`Vòng có răng ở mép ngoài. Các bánh răng cạnh nhau ăn khớp.`),
+      t(`Turn one: every meshed gear turns the same amount the other way.`,`Xoay một bánh: mọi bánh ăn khớp xoay cùng góc, ngược chiều.`),
+      t(`One move changes 2 gaps. It can help one gear and block the other.`,`Một lần xoay đổi 2 chỗ hở. Có lợi cho vòng này, có thể chặn vòng kia.`),
+      t(`Meshing is not a link. No connector links left: it clears like any ring.`,`Ăn khớp không phải liên kết. Hết liên kết đầu nối: vỡ như vòng thường.`),
+      t(`Hardest to read, so it unlocks last.`,`Khó đọc nhất, nên mở sau cùng.`),
       fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
     ]),unlock('TBD'),demo('gearRing'))+
     ent(nm('Fail-safe','Cơ chế chống kẹt'),ul([
@@ -1195,11 +1194,12 @@ function view(l){
   B['element-tutorial']=table(t('Element tutorial','Hướng dẫn yếu tố đặc biệt'),
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
-      [N.el1,popup('Link bar!<br>Free both ends to break it.','Thanh nối!<br>Gỡ cả hai đầu để phá thanh nối.')+' '+t('(proposed, no popup seen at level 7)','(đề xuất, không thấy popup ở màn 7)'),lvl(7)],
-      [N.el2,popup('Pin!<br>Turn the gap to the clamp to drop the pin.','Chốt treo!<br>Xoay chỗ hở tới kẹp để thả chốt.')+' '+t('(proposed, no popup seen at level 10)','(đề xuất, không thấy popup ở màn 10)'),lvl(10)],
-      [N.el3,popup('Locked ring!<br>Break the piece with the key first.','Vòng khóa!<br>Phá vật giữ chìa khóa trước.'),lvl('TBD')],
-      [N.el4,popup('Gear rings!<br>Turn one, its partner turns the other way.','Bánh răng!<br>Xoay một vòng, vòng kia xoay ngược chiều.'),lvl('TBD')]
-    ]);
+      [N.el1,popup('Free both ends of the bar<br>to break it.','Gỡ cả hai đầu thanh nối<br>để phá thanh.'),lvl(7)],
+      [N.el2,popup('Turn the gap to the clamp<br>to drop the pin.','Xoay chỗ hở tới kẹp<br>để thả chốt.'),lvl(10)],
+      [N.el3,popup('Break the piece with the key<br>to unlock the ring.','Phá vật giữ chìa khóa<br>để mở vòng khóa.'),lvl('TBD')],
+      [N.el4,popup('Turn one gear,<br>the other turns the opposite way.','Xoay một bánh răng,<br>bánh kia xoay ngược chiều.'),lvl('TBD')]
+    ])+
+    `<p class="note">${t(`${P.el1} and ${P.el2} text is proposed: the video shows no popup at levels 7 and 10.`,`Chữ của ${P.el1} và ${P.el2} là đề xuất: video không có popup ở màn 7 và 10.`)}</p>`;
 
   /* PER GAME: one row per booster */
   B['booster-tutorial']=table(t('Booster tutorial','Hướng dẫn công cụ hỗ trợ'),
@@ -1527,7 +1527,8 @@ function view(l){
         t(`Replaced Firework, Hammer and the old Saw. The old ones all removed pieces in almost the same way.`,`Thay Pháo hoa, Búa và Cưa cũ. Các booster cũ đều xóa vật gần như giống nhau.`),
         t(`New set, weakest to strongest: ${P.bo1} (lights up rings that can turn), ${P.bo2} (cuts one connector), ${P.bo3} (removes one ring, hammer animation).`,`Bộ mới, từ yếu đến mạnh: ${P.bo1} (làm sáng vòng xoay được), ${P.bo2} (cắt một đầu nối), ${P.bo3} (xóa một vòng, hiệu ứng búa).`),
         t(`Unlock levels are TBD. Revive and Retry with Booster now use ${P.bo3}.`,`Màn mở khóa chưa chốt (TBD). Hồi sinh và Chơi lại kèm công cụ giờ dùng ${P.bo3}.`),
-        t(`Element tutorial popups (2.3): added proposed text for ${P.el1} and ${P.el2}.`,`Popup hướng dẫn yếu tố (2.3): thêm chữ đề xuất cho ${P.el1} và ${P.el2}.`),
+        t(`Elements (1.4): shorter bullets, one idea per line.`,`Yếu tố (1.4): viết gọn, mỗi dòng một ý.`),
+        t(`Element popups (2.3): rewritten as “do this, to get that” on 2 lines, like earlier GDDs. Added proposed text for ${P.el1} and ${P.el2}.`,`Popup yếu tố (2.3): viết lại theo dạng “làm gì, để được gì” trên 2 dòng, như các GDD trước. Thêm chữ đề xuất cho ${P.el1} và ${P.el2}.`),
         t(`Booster tutorial popups (2.4): “Highlight movable rings”, “Remove a connector”, “Remove a ring”.`,`Popup hướng dẫn booster (2.4): “Làm sáng các vòng xoay được”, “Xóa một đầu nối”, “Xóa một vòng”.`)
       ]))+
       ent(t('Main game mechanics','Cơ chế chính'),ul([
