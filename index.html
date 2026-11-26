@@ -1100,15 +1100,15 @@ function view(l){
   B['elements-mechanics']=
     ent(N.bar,ul([
       t(`A straight or bent metal bar. It does not turn.`,`Thanh kim loại thẳng hoặc gập khúc. Thanh không xoay.`),
-      t(`Its ends can rest on rings, like a connector. A ring's arm can also hook onto it.`,`Đầu thanh có thể tựa lên vòng, giống đầu nối. Tay của vòng cũng có thể móc lên thanh.`),
-      t(`Free an end: turn that ring until its gap passes the end.`,`Gỡ một đầu: xoay vòng đó tới khi chỗ hở đi qua đầu thanh.`),
-      t(`${P.el1}s usually hold it up in the air, so part of it may touch no ring.`,`${P.el1} thường giữ thanh trong không trung, nên có đoạn thanh không chạm vòng nào.`),
-      t(`Nothing rests on it or hooks it any more: the bar comes out, and the ${P.el1}s holding it go with it.`,`Không còn gì tựa hay móc vào thanh: thanh được rút ra, các ${P.el1} giữ nó biến mất theo.`),
-      t(`It is solid: free arms and bombs cannot pass it. A hook on a bar never slips out (a bar has no gap): only a ${P.el2} clears it.`,`Thanh là vật cứng: tay tự do và bom không đi xuyên qua được. Móc trên thanh không bao giờ tuột (thanh không có chỗ hở): chỉ ${P.el2} gỡ được.`)
+      t(`It runs into a ring through the ring's gap. While it is in, that ring cannot turn: the bar is in the way of its tube.`,`Thanh chọc vào trong vòng qua chỗ hở của vòng. Khi thanh còn ở trong, vòng đó không xoay được: thanh chặn thân vòng.`),
+      t(`${P.el1}s on the bar hold it. A pin works like a sleeve: the bar can only slide along one line, the line of the bar where the pin is.`,`${P.el1} trên thanh giữ thanh. Chốt như một ống nối: thanh chỉ trượt được trên 1 đường duy nhất, theo hướng đoạn thanh có chốt.`),
+      t(`Pull it out: tap and drag the bar to slide it out of its pins. It stops when it hits a ring tube or another part.`,`Rút thanh: chạm và kéo thanh để trượt nó ra khỏi chốt. Thanh dừng khi chạm thân vòng hoặc vật khác.`),
+      t(`Once the bar has slid off a pin, that pin lets go. No pin holds it any more: the bar comes out, and its pins go with it.`,`Thanh trượt khỏi chốt nào thì chốt đó buông. Không còn chốt nào giữ: thanh được rút ra, các chốt biến mất theo.`),
+      t(`It is solid: free arms and bombs cannot pass it. A ring's arm can hook onto it: then the bar cannot slide (a knot), and only a ${P.el2} clears it.`,`Thanh là vật cứng: tay tự do và bom không đi xuyên qua được. Tay của vòng có thể móc lên thanh: khi đó thanh không trượt được (nút kẹt), chỉ ${P.el2} gỡ được.`)
     ]),unlock(7))+
     ent(N.el1,ul([
       t(`A pin that stands on its own. Not attached to any ring. Unlocks with the ${P.bar} and is used mostly to hold bars.`,`Chốt đứng riêng. Không gắn vào vòng nào. Mở cùng ${P.bar} và chủ yếu dùng để giữ thanh.`),
-      t(`On a bar: it only holds the bar in the air and goes away with it.`,`Trên thanh: chốt chỉ giữ thanh trong không trung và biến mất cùng thanh.`),
+      t(`On a bar: it is a sleeve. The bar can only slide along it, and the pin lets go once the bar slides off it. It goes away with the bar.`,`Trên thanh: chốt là ống nối. Thanh chỉ trượt dọc theo chốt, và chốt buông khi thanh trượt ra khỏi nó. Chốt biến mất cùng thanh.`),
       t(`On a ring: it locks the ring. A piece it locks cannot clear.`,`Trên vòng: chốt khóa vòng đó. Vật bị chốt khóa chưa được dọn.`),
       t(`It is solid: free arms and bombs stop at it.`,`Chốt là vật cứng: tay tự do và bom dừng lại khi chạm chốt.`),
       t(`Free a ring: turn its gap past the pin.`,`Gỡ vòng: xoay chỗ hở qua chốt.`),
@@ -1215,8 +1215,8 @@ function view(l){
   B['element-tutorial']=table(t('Element tutorial','Hướng dẫn yếu tố đặc biệt'),
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
-      [N.bar,popup('Free every end of the bar<br>to pull it out.','Gỡ mọi đầu thanh<br>để rút thanh ra.'),lvl(7)],
-      [N.el1,popup('Pins hold the bar up.<br>They go with the bar.','Chốt giữ thanh trong không trung.<br>Chốt biến mất cùng thanh.'),lvl(7)],
+      [N.bar,popup('Slide the bar out of its pins<br>to free the rings it blocks.','Trượt thanh ra khỏi chốt<br>để gỡ các vòng nó chặn.'),lvl(7)],
+      [N.el1,popup('A bar slides only along its pins.<br>Slide it off them to pull it out.','Thanh chỉ trượt theo chốt.<br>Trượt thanh khỏi chốt để rút ra.'),lvl(7)],
       [N.el2,popup('Turn the bomb into another ring<br>to blow both up.','Xoay bom chạm vào vòng khác<br>để phá cả hai.'),lvl(12)],
       [N.el3,popup('Break the piece with the key<br>to unlock the ring.','Phá vật giữ chìa khóa<br>để mở vòng khóa.'),lvl(17)],
       [N.el4,popup('Turn one gear,<br>the other turns the opposite way.','Xoay một bánh răng,<br>bánh kia xoay ngược chiều.'),lvl(22)]
@@ -1547,6 +1547,11 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 26, 2026','26/11/2026'),
+      ent(t('Straight Bar slides through its pins','Thanh thẳng trượt qua chốt'),ul([
+        t(`A bar no longer rests its ends on ring tubes. It runs into rings through their gaps, and a ring with a bar in its gap cannot turn.`,`Đầu thanh không còn tựa lên thân vòng. Thanh chọc vào trong vòng qua chỗ hở, và vòng có thanh trong chỗ hở thì không xoay được.`),
+        t(`${P.el1}s on a bar are sleeves: the player drags the bar to slide it along one line, out of its pins. With no pin left it comes out.`,`${P.el1} trên thanh là ống nối: người chơi kéo thanh để trượt nó trên 1 đường, ra khỏi chốt. Không còn chốt nào thì thanh được rút ra.`),
+        t(`A hook on a bar stops it sliding (a knot only a ${P.el2} clears). New popups for ${P.bar} and ${P.el1}.`,`Móc trên thanh làm thanh không trượt được (nút kẹt chỉ ${P.el2} gỡ). Popup mới cho ${P.bar} và ${P.el1}.`)
+      ]))+
       ent(t('Level timer','Đồng hồ màn'),ul([
         t(`Each level has its own play time (TBD per level). It starts when the player moves the first ring.`,`Mỗi màn có thời gian chơi riêng (TBD theo màn). Đồng hồ chạy khi người chơi xoay vòng đầu tiên.`),
         t(`Lose: the timer reaches 0 before the level is cleared.`,`Thua: đồng hồ về 0 mà chưa dọn xong màn.`),
