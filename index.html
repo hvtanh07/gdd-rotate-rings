@@ -890,7 +890,12 @@ function view(l){
     ]))+
     ent(t('Win and lose','Thắng và thua'),params([
       [t('Win','Thắng'),t(`Every ring and piece on the board is cleared.`,`Dọn hết mọi vòng và vật trên màn.`)],
-      [t('Lose','Thua'),t(`No lose state in levels 1–10: the HUD shows no move limit and no timer. TBD.`,`Không thấy trạng thái thua ở màn 1–10: HUD không có giới hạn move hay đồng hồ. Chưa chốt (TBD).`)]
+      [t('Timer','Đồng hồ'),ul([
+        t(`Each level has its own play time. Seconds per level: set in the level config, TBD.`,`Mỗi màn có thời gian chơi riêng. Số giây mỗi màn: đặt trong config màn, TBD.`),
+        t(`The timer starts when the player moves the first ring.`,`Đồng hồ bắt đầu chạy khi người chơi xoay vòng đầu tiên.`),
+        t(`Where and how the timer shows on the HUD: TBD.`,`Vị trí và cách hiện đồng hồ trên HUD: TBD.`)
+      ])],
+      [t('Lose','Thua'),t(`The timer reaches 0 before the level is cleared. Revive shows first (1.3).`,`Đồng hồ về 0 mà chưa dọn xong màn. Hiện Hồi sinh trước (1.3).`)]
     ]));
 
   B['main-game-mechanics']=
@@ -1057,12 +1062,12 @@ function view(l){
       ])+`<p class="note">${t(`Remote config: <code>level_loop_last_level</code>, <code>level_loop_start_level</code>.`,`Cấu hình từ xa: <code>level_loop_last_level</code>, <code>level_loop_start_level</code>.`)}</p>`))+
 
     sys(nm('Revive','Hồi sinh'),
-      lead(t(`When the player loses, one more chance to continue the same attempt. Shows before the lose screen. Applies only once a lose condition exists (TBD, see 1.1).`,
-             `Khi thua, người chơi có thêm một cơ hội chơi tiếp lượt đang chơi. Hiện trước màn hình thua. Chỉ áp dụng khi game có điều kiện thua (TBD, xem 1.1).`))+
+      lead(t(`When the timer reaches 0, one more chance to continue the same attempt. Shows before the lose screen.`,
+             `Khi đồng hồ về 0, người chơi có thêm một cơ hội chơi tiếp lượt đang chơi. Hiện trước màn hình thua.`))+
       tiles([
         ['900',t('Coins for the 1st revive','Xu cho lần hồi sinh đầu')],
         ['1',t('Revive by ad per attempt','Lần hồi sinh bằng quảng cáo mỗi lượt')],
-        [t(`1 free`,`1 miễn phí`),t(`${P.bo3} used on revive`,`${P.bo3} dùng khi hồi sinh`),'hot']
+        [t(`+30 s`,`+30 giây`),t(`Added to the timer per revive`,`Cộng vào đồng hồ mỗi lần hồi sinh`),'hot']
       ])+
       panel(t('Options','Lựa chọn'),
         table(t('Revive options','Lựa chọn hồi sinh'),[t('Option','Lựa chọn'),t('Cost','Giá'),t('Limit and notes','Giới hạn và ghi chú')],[
@@ -1072,11 +1077,10 @@ function view(l){
         ],'compact'))+
       panel(t('On revive','Khi hồi sinh'),ul([
         t(`Continue from where it stopped. No restart, no life lost.`,`Chơi tiếp từ chỗ dừng. Không chơi lại, không mất tim.`),
-        t(`A free ${P.bo3} is used at once.`,`Dùng ngay 1 ${P.bo3} miễn phí.`)+' '+
-          t(`It removes the ring that holds the most links. TBD.`,`Nó xóa vòng đang giữ nhiều liên kết nhất. Chưa chốt (TBD).`),
-        t(`It is not taken from the inventory, and works even if ${P.bo3} is not owned or unlocked.`,`Không trừ vào kho, và vẫn dùng được dù chưa có hay chưa mở ${P.bo3}.`),
+        t(`Each revive adds 30 s to the timer (<code>revive_time_bonus</code>). The timer runs again at once.`,`Mỗi lần hồi sinh cộng 30 giây vào đồng hồ (<code>revive_time_bonus</code>). Đồng hồ chạy lại ngay.`),
+        t(`The board stays as it was. No booster is used.`,`Màn chơi giữ nguyên. Không dùng booster nào.`),
         t(`Revive count and price reset on a new attempt.`,`Số lần và giá hồi sinh tính lại khi bắt đầu lượt mới.`),
-        t(`Ad or purchase fails: back to the popup. Input locked while the booster plays.`,`Quảng cáo hoặc giao dịch lỗi: quay lại popup. Khóa thao tác khi công cụ đang chạy.`)
+        t(`Ad or purchase fails: back to the popup. The timer stays paused while the popup is open.`,`Quảng cáo hoặc giao dịch lỗi: quay lại popup. Đồng hồ dừng khi popup đang mở.`)
       ])))+
 
     sys(nm('Win screen','Màn hình thắng'),
@@ -1143,7 +1147,7 @@ function view(l){
       t(`A free arm or bomb that bumps a part never makes a level stuck: the player turns the other way or clears the part in the way.`,`Tay tự do hay bom va vào vật khác không làm màn bị kẹt: người chơi xoay chiều ngược lại hoặc dọn vật cản trước.`),
       t(`Stuck: a knot is meant for a ${P.el2}, but the bomb hit another ring or its ring shattered first. No turn frees the knot. The player uses ${P.bo2} or ${P.bo3}, or restarts. Auto restart offer: TBD.`,`Kẹt: nút kẹt dành cho ${P.el2}, nhưng bom chạm vòng khác hoặc vòng mang bom vỡ trước. Không lần xoay nào gỡ được nút. Người chơi dùng ${P.bo2} hoặc ${P.bo3}, hoặc chơi lại. Tự gợi ý chơi lại: chưa chốt (TBD).`),
       t(`Stuck: the piece holding the key can only be freed by turning the ${P.el3}. Level design must avoid this. If it still happens, the lock opens by itself.`,`Kẹt: vật giữ chìa khóa chỉ gỡ được bằng cách xoay ${P.el3}. Thiết kế màn phải tránh trường hợp này. Nếu vẫn xảy ra, ổ khóa tự mở.`),
-      t(`If a move limit is added later (see the lose condition in 1.1), define the stuck cases here. TBD.`,`Nếu sau này thêm giới hạn move (xem điều kiện thua ở 1.1), cần định nghĩa trường hợp kẹt ở đây. Chưa chốt (TBD).`)
+      t(`The level timer (1.1) is the only countdown. A stuck player who runs out of time loses, then gets the Revive offer.`,`Đồng hồ màn (1.1) là đếm ngược duy nhất. Người chơi bị kẹt mà hết giờ thì thua, rồi được mời Hồi sinh.`)
     ])).replace('<div class="ent">','<div class="ent" id="lock-fail-safe">');
 
   /* PER GAME: one ent per booster: ent(N.key, ul([...]), unlockB(level), demo('key')) */
@@ -1282,7 +1286,7 @@ function view(l){
     ['BGM In Game','ui',t('Gameplay starts','Bắt đầu vào chơi'),0],
     ['BGM Home','ui',t('The home scene is open','Đang ở màn hình chính'),0],
     ['Win Level','ui',t('The player wins the level','Người chơi thắng màn'),3],
-    ['Lose Level','ui',t('The player is temporarily stuck','Người chơi tạm thời bị kẹt'),3],
+    ['Lose Level','ui',t('The timer reaches 0 before the level is cleared','Đồng hồ về 0 mà chưa dọn xong màn'),3],
     ['Tap','ui',t('The player taps the screen','Người chơi chạm vào màn hình'),1],
     ['Coin Reward','ui',t('The player earns coins','Người chơi nhận xu'),0],
     ['Booster Reward','ui',t('The player earns a booster','Người chơi nhận công cụ hỗ trợ'),0],
@@ -1325,7 +1329,8 @@ function view(l){
     rc(t('Revive','Hồi sinh'),[
       ['revive_base_cost',t('Coin cost of the 1st revive in an attempt','Số xu cho lần hồi sinh đầu tiên trong một lượt chơi'),'900',coin],
       ['revive_cost_growth',t('Revive cost growth (next revive = current cost × this)','Mức tăng giá hồi sinh (lần sau = giá hiện tại × hệ số này)'),'1.00×','×'],
-      ['revive_max_ads_per_attempt',t('Max revives by ad in one attempt','Số lần hồi sinh bằng quảng cáo tối đa trong một lượt chơi'),'1',t('count','lần')]
+      ['revive_max_ads_per_attempt',t('Max revives by ad in one attempt','Số lần hồi sinh bằng quảng cáo tối đa trong một lượt chơi'),'1',t('count','lần')],
+      ['revive_time_bonus',t('Seconds added to the timer per revive','Số giây cộng vào đồng hồ mỗi lần hồi sinh'),'30',t('s','giây')]
     ])+
     rc(t('Level loop back','Lặp lại màn chơi'),[
       ['level_loop_last_level',t('Last level. After it, the game loops back.','Màn cuối cùng. Sau màn này, game quay lại lặp màn.'),'40',t('level','màn')],
@@ -1542,6 +1547,11 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 26, 2026','26/11/2026'),
+      ent(t('Level timer','Đồng hồ màn'),ul([
+        t(`Each level has its own play time (TBD per level). It starts when the player moves the first ring.`,`Mỗi màn có thời gian chơi riêng (TBD theo màn). Đồng hồ chạy khi người chơi xoay vòng đầu tiên.`),
+        t(`Lose: the timer reaches 0 before the level is cleared.`,`Thua: đồng hồ về 0 mà chưa dọn xong màn.`),
+        t(`Revive: +30 s on the timer each time, instead of a free booster. New remote config key <code>revive_time_bonus</code>.`,`Hồi sinh: +30 giây vào đồng hồ mỗi lần, thay cho booster miễn phí. Thêm key cấu hình từ xa <code>revive_time_bonus</code>.`)
+      ]))+
       ent(t('Solid parts, Straight Bar and Pin','Vật cứng, Thanh thẳng và Chốt'),ul([
         t(`Pins, connectors, bars and bombs are now solid: none passes through another. A ring stops when an arm or bomb it carries hits a part. Ring tubes still overlap.`,`Chốt, đầu nối, thanh và bom giờ là vật cứng: không vật nào đi xuyên qua vật khác. Vòng dừng khi tay hoặc bom nó mang chạm vật khác. Thân vòng vẫn chồng lên nhau được.`),
         t(`${P.bar} is back as an element. It unlocks with ${P.el1} at level 7, and pins are used mostly to hold bars.`,`${P.bar} quay lại làm yếu tố. Thanh mở cùng ${P.el1} ở màn 7, và chốt chủ yếu dùng để giữ thanh.`),
