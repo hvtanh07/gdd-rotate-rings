@@ -630,19 +630,19 @@ const DEMOS={
       ...shardTracks('shA',2.15),...shardTracks('shB',2.2),
       ...praiseTracks('pr',2.2)
     ]},
-  /* element: a straight bar locks like a ring; here a bar bent in 3 segments hooks into two rings and shatters once both ends are free */
-  straightBar:{D:6.4,
-    svg:()=>`<g class="rL">${bb(55,124,32)}${ringP(55,124,28,6,90,70)}</g>`+
-      `<g class="rR">${bb(145,124,32)}${ringP(145,124,28,2,90,70)}</g>`+
-      `<g class="bar"><path d="M55 96V52H145V96" fill="none" class="s3" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`+
-      `<path d="M58 92V55H142V92" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.8" stroke-linejoin="round"/></g>`+
-      tap(55,150)+`<circle class="tap2 tap" cx="145" cy="150" r="15" style="opacity:0"/>`+
-      shards(100,60,3,'shBar',12,40)+shards(55,124,6,'shL')+shards(145,124,2,'shR')+praise(100,30,'Excellent!','pr'),
+  /* element: a bomb sits on a ring and turns with it; when it touches another ring both rings blow up */
+  bomb:{D:5.6,
+    svg:()=>`<g class="rL">${bb(68,110,32)}${ringP(68,110,28,6,180,64)}`+
+        `<g><circle cx="68" cy="82" r="8.5" fill="#2B2F3A"/><circle cx="65.5" cy="79.5" r="2.4" fill="#fff" fill-opacity=".45"/><path d="M71 75q4-5 8-3" fill="none" stroke="#B9803F" stroke-width="2" stroke-linecap="round"/><circle cx="79.5" cy="72" r="2.2" fill="#F4BE0B"/></g></g>`+
+      `<g class="rR">${bb(132,110,32)}${ringP(132,110,28,2,0,64)}</g>`+
+      `<g class="pinx"><circle cx="132" cy="138" r="7" class="f1"/><circle cx="130" cy="136" r="2.4" fill="#fff" fill-opacity=".5"/></g>`+
+      `<circle class="boom" cx="100" cy="110" r="22" fill="#FFD54F" style="opacity:0"/>`+
+      tap(68,140)+shards(68,110,6,'shL')+shards(132,110,2,'shR')+shards(132,138,1,'shP',8,16)+praise(100,40,'Amazing!','pr'),
     tracks:()=>[
-      ...tapTracks(.5),spin('.rL',.8,1.6,180),
-      ...tapTracks(2.0,'.tap2'),spin('.rR',2.3,3.1,180),
-      fadeOut('.bar',3.3),...shardTracks('shBar',3.3),...praiseTracks('pr',3.35),
-      fadeOut('.rL',3.9),fadeOut('.rR',3.9),...shardTracks('shL',3.9),...shardTracks('shR',3.95)
+      ...tapTracks(.5),spin('.rL',.8,1.8,90),
+      ['.boom','opacity',[[0,0],[1.8,0],[1.9,.95],[2.4,0]]],['.boom','transform',[[1.8,'scale(.3)'],[2.4,'scale(1.6)']]],
+      fadeOut('.rL',1.9),fadeOut('.rR',1.9),...shardTracks('shL',1.9),...shardTracks('shR',1.95),...praiseTracks('pr',2.0),
+      fadeOut('.pinx',2.5),...shardTracks('shP',2.5)
     ]},
   /* element: a pin stands on its own and locks every ring that passes over it; once it locks nothing it shatters by itself */
   pin:{D:6,
@@ -846,11 +846,11 @@ function view(l){
 
   /* names reused across sections */
   const N={
-    el1:nm('Straight Bar','Thanh thẳng'),el2:nm('Pin','Chốt'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
+    el1:nm('Pin','Chốt'),el2:nm('Bomb','Bom'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
     bo1:nm('Hint','Gợi ý'),bo2:nm('Saw','Cưa'),bo3:nm('Remove','Xóa vòng')
   };
   const P={ /* plain names for running text and tables */
-    el1:t('Straight Bar','Thanh thẳng'),el2:t('Pin','Chốt'),el3:t('Locked Ring','Vòng khóa'),el4:t('Gear Ring','Bánh răng'),
+    el1:t('Pin','Chốt'),el2:t('Bomb','Bom'),bar:t('Straight Bar','Thanh thẳng'),el3:t('Locked Ring','Vòng khóa'),el4:t('Gear Ring','Bánh răng'),
     bo1:t('Hint','Gợi ý'),bo2:t('Saw','Cưa'),bo3:t('Remove','Xóa vòng')
   };
   const withEl=t('With elements','Khi gặp yếu tố đặc biệt');
@@ -861,7 +861,7 @@ function view(l){
   /* PER GAME: demo captions, one per DEMOS key */
   const DCAP={
     rotate:t('Tap and move the orange ring. It turns until its gap reaches the blue connector, the link breaks and both rings shatter.','Chạm và di chuyển vòng cam. Vòng xoay tới khi chỗ hở gặp đầu nối xanh, liên kết bị tách và cả hai vòng vỡ.'),
-    straightBar:t('The bar locks into both rings like a ring would. Turn each ring until its gap passes the bar. Once the bar locks nothing and nothing locks it, it shatters.','Thanh khóa vào hai vòng giống như một vòng. Xoay từng vòng cho chỗ hở đi qua thanh. Khi thanh không còn khóa và không bị khóa, thanh vỡ.'),
+    bomb:t('The blue ring is pinned and no turn frees it. Tap the orange ring: the bomb on it turns into the blue ring and both rings blow up. The pin locks nothing now, so it shatters.','Vòng xanh bị chốt giữ, không lần xoay nào gỡ được. Chạm vòng cam: quả bom trên nó xoay tới chạm vòng xanh và cả hai vòng nổ tung. Chốt không còn khóa gì nên tự vỡ.'),
     pin:t('The red pin stands on its own and locks both rings. Turn each ring until its gap passes the pin. The pin locks nothing now, so it shatters by itself.','Chốt đỏ đứng riêng và khóa cả hai vòng. Xoay từng vòng cho chỗ hở đi qua chốt. Chốt không còn khóa gì nên tự vỡ.'),
     lockedRing:t('A tap on the locked ring only shakes it. The yellow ring turns, shatters, and its key flies to the lock. Now the blue ring turns.','Chạm vòng khóa thì vòng chỉ rung. Vòng vàng xoay rồi vỡ, chìa khóa bay tới ổ khóa. Lúc này vòng xanh mới xoay được.'),
     gearRing:t('Tap the orange gear: it turns one way and the green gear turns the other way. The green gap frees the purple ring.','Chạm bánh răng cam: nó xoay một chiều, bánh răng xanh xoay ngược lại. Chỗ hở của vòng xanh gỡ được vòng tím.'),
@@ -999,7 +999,7 @@ function view(l){
            <div class="lvrow blk"><span class="lvk">${t('New element unlocks','Mở yếu tố mới')}</span><div class="lvcells">${
              [5,6,7,8,9,10].map(n=>n===5||n===10?`<span class="nw">${t('New','Mới')}<span class="sr"> ${t('at level','ở màn')} ${n}, </span></span>`:'<span></span>').join('')}</div></div>
          </div>`+
-        `<p>${t(`Elements unlock at 5 and 10. After level 7 the bar shows “3/5”.`,`Yếu tố mở ở màn 5 và 10. Sau màn 7 thanh hiện “3/5”.`)}</p>`))+
+        `<p>${t(`Elements unlock at 7 and 12. After level 9 the bar shows “3/5”.`,`Yếu tố mở ở màn 7 và 12. Sau màn 9 thanh hiện “3/5”.`)}</p>`))+
 
     sys(nm('Win screen bonus','Thưởng thêm ở màn hình thắng'),
       lead(t(`On the Victory screen, a swinging needle picks a multiplier for the level’s coins. The player watches a rewarded ad to get it.`,
@@ -1094,30 +1094,30 @@ function view(l){
   /* PER GAME: one ent per element: ent(N.key, ul([...rules]), unlock(level), demo('key')) */
   B['elements-mechanics']=
     ent(N.el1,ul([
-      t(`A straight bar, or a bar bent into 1 or more segments.`,`Thanh thẳng, hoặc gập khúc thành 1 hay nhiều đoạn.`),
-      t(`Same lock logic as a ring: it can lock rings and other bars, and they can lock it.`,`Logic khóa giống vòng: thanh khóa được vòng và thanh khác, và cũng bị chúng khóa.`),
-      t(`A ring frees the bar when the ring turns its gap past the bar.`,`Vòng xoay chỗ hở qua thanh thì thanh được gỡ khỏi vòng đó.`),
-      t(`Can the player move the bar: TBD.`,`Người chơi có di chuyển được thanh không: TBD.`),
-      t(`No locks left: the bar shatters, like a ring.`,`Hết khóa: thanh vỡ, như vòng.`),
-      t(`Replaces the Link Bar with grey sleeves seen at level 7.`,`Thay cho Link Bar có khớp xám thấy ở màn 7.`),
-      fsLine(`if the bar cannot move, a bar locked only by a ${P.el2} or another bar can get stuck.`,`nếu thanh không di chuyển được, thanh chỉ bị ${P.el2} hoặc thanh khác khóa có thể bị kẹt.`)
-    ]),unlock(7),demo('straightBar'))+
-    ent(N.el2,ul([
-      t(`A pin that stands on its own. Not attached to any ring or bar.`,`Chốt đứng riêng. Không gắn vào vòng hay thanh nào.`),
-      t(`It locks rings and bars like a ring does. A piece it locks cannot clear.`,`Chốt khóa vòng và thanh giống như vòng. Vật bị chốt khóa chưa được dọn.`),
+      t(`A pin that stands on its own. Not attached to any ring.`,`Chốt đứng riêng. Không gắn vào vòng nào.`),
+      t(`It sits on a ring and locks it. A piece it locks cannot clear.`,`Chốt nằm trên vòng và khóa vòng đó. Vật bị chốt khóa chưa được dọn.`),
       t(`Free a ring: turn its gap past the pin.`,`Gỡ vòng: xoay chỗ hở qua chốt.`),
       t(`The pin does not turn.`,`Chốt không xoay.`),
       t(`Locks nothing: the pin shatters by itself.`,`Không còn khóa vật nào: chốt tự vỡ.`),
-      fsLine(`see ${P.el1}.`,`xem ${P.el1}.`)
-    ]),unlock(10),demo('pin'))+
+      t(`A pin on a ring that cannot turn its gap past it (a closed ring, or a ring held by its own connector forever) makes a knot. Only a ${P.el2} clears it.`,`Chốt trên vòng không xoay được chỗ hở qua nó (vòng kín, hoặc vòng bị đầu nối của chính nó giữ mãi) tạo thành nút kẹt. Chỉ ${P.el2} gỡ được.`)
+    ]),unlock(7),demo('pin'))+
+    ent(N.el2,ul([
+      t(`A bomb sits on a ring and turns with it.`,`Bom nằm trên một vòng và xoay theo vòng đó.`),
+      t(`When the bomb touches another ring, it explodes: its own ring and the ring it touched both shatter, whatever links they still have.`,`Khi bom chạm vào vòng khác thì nổ: vòng mang bom và vòng bị chạm cùng vỡ, dù còn liên kết hay không.`),
+      t(`A ring's gap does not count as a touch. Rings the bomb touches at the start do not set it off, only a new touch does.`,`Chỗ hở của vòng không tính là chạm. Vòng bom đang chạm lúc bắt đầu không làm nổ, chỉ lần chạm mới mới nổ.`),
+      t(`If its ring shatters first, the bomb goes with it and does not explode.`,`Nếu vòng mang bom vỡ trước, bom vỡ theo và không nổ.`),
+      t(`Use: a knot no turn can free (two rings hooked onto each other, a connector resting on a closed ring, a pin on a closed ring). The right bomb hit clears it.`,`Công dụng: gỡ nút kẹt mà không lần xoay nào gỡ được (hai vòng móc vào nhau, đầu nối tựa lên vòng kín, chốt trên vòng kín). Bom chạm đúng vòng thì gỡ được.`),
+      t(`Challenge: choose which way to turn, and when, so the bomb hits the knot and not another ring first.`,`Thử thách: chọn chiều xoay và thời điểm để bom chạm đúng nút kẹt, không chạm vòng khác trước.`),
+      fsLine(`a bomb that hits the wrong ring leaves the knot in place.`,`bom chạm sai vòng thì nút kẹt vẫn còn.`)
+    ]),unlock(12),demo('bomb'))+
     ent(N.el3,ul([
       t(`A ring with a padlock. A tap only shakes it, it does not turn.`,`Vòng có ổ khóa. Chạm vào chỉ rung, không xoay.`),
-      t(`Its key sits on another piece (a ring or a ${P.el1}).`,`Chìa khóa nằm trên vật khác (một vòng hoặc ${P.el1}).`),
+      t(`Its key sits on another ring.`,`Chìa khóa nằm trên một vòng khác.`),
       t(`Key holder shatters: the key flies to the lock and opens it. It is a normal ring from then on.`,`Vật giữ chìa vỡ: chìa bay tới ổ khóa và mở khóa. Từ đó là vòng thường.`),
       t(`Still locked but no links left: it clears as usual.`,`Còn khóa nhưng hết liên kết: vẫn được dọn như thường.`),
       t(`Boosters: ${P.bo1} does not light it while locked. ${P.bo3} on the key holder releases the key. ${P.bo3} on the locked ring clears it.`,`Booster: ${P.bo1} không làm sáng vòng còn khóa. ${P.bo3} lên vật giữ chìa thì nhả chìa. ${P.bo3} lên vòng khóa thì dọn luôn vòng.`),
       fsLine(`the key holder can only be freed by turning the locked ring.`,`vật giữ chìa chỉ gỡ được bằng cách xoay vòng khóa.`)
-    ]),unlock('TBD'),demo('lockedRing'))+
+    ]),unlock(17),demo('lockedRing'))+
     ent(N.el4,ul([
       t(`A ring with teeth on its outer edge. Gear rings side by side mesh.`,`Vòng có răng ở mép ngoài. Các bánh răng cạnh nhau ăn khớp.`),
       t(`Turn one: every meshed gear turns the same amount the other way.`,`Xoay một bánh: mọi bánh ăn khớp xoay cùng góc, ngược chiều.`),
@@ -1125,10 +1125,10 @@ function view(l){
       t(`Meshing is not a link. No connector links left: it clears like any ring.`,`Ăn khớp không phải liên kết. Hết liên kết đầu nối: vỡ như vòng thường.`),
       t(`Hardest to read, so it unlocks last.`,`Khó đọc nhất, nên mở sau cùng.`),
       fsLine(`no countdown, so no stuck case.`,`không có đếm ngược, nên không bị kẹt.`)
-    ]),unlock('TBD'),demo('gearRing'))+
+    ]),unlock(22),demo('gearRing'))+
     ent(nm('Fail-safe','Cơ chế chống kẹt'),ul([
       t(`No element counts down on player actions. Rings can be turned any number of times. The stuck cases are below.`,`Không yếu tố nào đếm ngược theo thao tác. Vòng xoay được không giới hạn. Các trường hợp kẹt ở bên dưới.`),
-      t(`Stuck: a ${P.el1} locked only by a ${P.el2} or another bar, if bars cannot move (TBD). Level design must avoid this. If it still happens, that lock breaks by itself.`,`Kẹt: ${P.el1} chỉ bị ${P.el2} hoặc thanh khác khóa, nếu thanh không di chuyển được (TBD). Thiết kế màn phải tránh trường hợp này. Nếu vẫn xảy ra, khóa đó tự vỡ.`),
+      t(`Stuck: a knot is meant for a ${P.el2}, but the bomb hit another ring or its ring shattered first. No turn frees the knot. The player uses ${P.bo2} or ${P.bo3}, or restarts. Auto restart offer: TBD.`,`Kẹt: nút kẹt dành cho ${P.el2}, nhưng bom chạm vòng khác hoặc vòng mang bom vỡ trước. Không lần xoay nào gỡ được nút. Người chơi dùng ${P.bo2} hoặc ${P.bo3}, hoặc chơi lại. Tự gợi ý chơi lại: chưa chốt (TBD).`),
       t(`Stuck: the piece holding the key can only be freed by turning the ${P.el3}. Level design must avoid this. If it still happens, the lock opens by itself.`,`Kẹt: vật giữ chìa khóa chỉ gỡ được bằng cách xoay ${P.el3}. Thiết kế màn phải tránh trường hợp này. Nếu vẫn xảy ra, ổ khóa tự mở.`),
       t(`If a move limit is added later (see the lose condition in 1.1), define the stuck cases here. TBD.`,`Nếu sau này thêm giới hạn move (xem điều kiện thua ở 1.1), cần định nghĩa trường hợp kẹt ở đây. Chưa chốt (TBD).`)
     ])).replace('<div class="ent">','<div class="ent" id="lock-fail-safe">');
@@ -1146,7 +1146,7 @@ function view(l){
       t(`Tap the button, then tap a connector (an arm and its plug): the saw cuts it.`,`Chạm nút, rồi chạm vào một đầu nối (tay nối và đầu tròn): cưa cắt nó.`),
       t(`That link is gone. A piece left with no links shatters, as with a normal clear.`,`Liên kết đó mất. Vật nào hết liên kết thì vỡ, như khi dọn bình thường.`),
       t(`Only the link is removed. Both rings stay if they still have other links.`,`Chỉ mất liên kết. Hai vòng vẫn còn nếu còn liên kết khác.`),
-      t(`Can it cut a ${P.el1} or a ${P.el2}: TBD. Tapping a ring or empty space: TBD.`,`Cắt được ${P.el1} hay ${P.el2} không: chưa chốt (TBD). Chạm vào vòng hoặc chỗ trống: chưa chốt (TBD).`),
+      t(`Can it cut a ${P.el1}: TBD. Tapping a ring or empty space: TBD.`,`Cắt được ${P.el1} không: chưa chốt (TBD). Chạm vào vòng hoặc chỗ trống: chưa chốt (TBD).`),
       t(`Animation: a hand saw (red handle, grey toothed blade) saws back and forth on the arm, then the arm breaks into shards.`,`Hiệu ứng: cưa tay (cán đỏ, lưỡi răng cưa xám) kéo qua lại trên tay nối, rồi tay nối vỡ thành mảnh.`)
     ]),unlockB('TBD'),demo('saw'))+
     ent(N.bo3,ul([
@@ -1198,12 +1198,12 @@ function view(l){
   B['element-tutorial']=table(t('Element tutorial','Hướng dẫn yếu tố đặc biệt'),
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
-      [N.el1,popup('Free the bar from every ring<br>to break it.','Gỡ thanh khỏi mọi vòng<br>để phá thanh.'),lvl(7)],
-      [N.el2,popup('Free every ring from the pin<br>to break it.','Gỡ mọi vòng khỏi chốt<br>để phá chốt.'),lvl(10)],
-      [N.el3,popup('Break the piece with the key<br>to unlock the ring.','Phá vật giữ chìa khóa<br>để mở vòng khóa.'),lvl('TBD')],
-      [N.el4,popup('Turn one gear,<br>the other turns the opposite way.','Xoay một bánh răng,<br>bánh kia xoay ngược chiều.'),lvl('TBD')]
+      [N.el1,popup('Free every ring from the pin<br>to break it.','Gỡ mọi vòng khỏi chốt<br>để phá chốt.'),lvl(7)],
+      [N.el2,popup('Turn the bomb into another ring<br>to blow both up.','Xoay bom chạm vào vòng khác<br>để phá cả hai.'),lvl(12)],
+      [N.el3,popup('Break the piece with the key<br>to unlock the ring.','Phá vật giữ chìa khóa<br>để mở vòng khóa.'),lvl(17)],
+      [N.el4,popup('Turn one gear,<br>the other turns the opposite way.','Xoay một bánh răng,<br>bánh kia xoay ngược chiều.'),lvl(22)]
     ])+
-    `<p class="note">${t(`${P.el1} and ${P.el2} text is proposed: the video shows no popup at levels 7 and 10.`,`Chữ của ${P.el1} và ${P.el2} là đề xuất: video không có popup ở màn 7 và 10.`)}</p>`;
+    `<p class="note">${t(`All element popup text is proposed: the video shows no element popup.`,`Chữ popup của mọi yếu tố là đề xuất: video không có popup yếu tố.`)}</p>`;
 
   /* PER GAME: one row per booster */
   B['booster-tutorial']=table(t('Booster tutorial','Hướng dẫn công cụ hỗ trợ'),
@@ -1219,10 +1219,10 @@ function view(l){
   /* PER GAME: every element and booster with its unlock level, sorted by level */
   const stops=[
     [1,t('First tutorial','Hướng dẫn đầu tiên'),'ftue','ftue-steps','FTUE'],
-    [7,P.el1,'elem','elements-mechanics'],[10,P.el2,'elem','elements-mechanics'],
+    [7,P.el1,'elem','elements-mechanics'],[12,P.el2,'elem','elements-mechanics'],
+    [17,P.el3,'elem','elements-mechanics'],[22,P.el4,'elem','elements-mechanics'],
     ['TBD',P.bo1,'boost','booster-mechanics'],['TBD',P.bo2,'boost','booster-mechanics'],
-    ['TBD',P.bo3,'boost','booster-mechanics'],['TBD',P.el3,'elem','elements-mechanics'],
-    ['TBD',P.el4,'elem','elements-mechanics']
+    ['TBD',P.bo3,'boost','booster-mechanics']
   ];
   B['ftue--tutorial:after']=`<div class="glance">
     <h4>${t('Unlock order at a glance','Thứ tự mở khóa theo màn')}</h4>
@@ -1239,7 +1239,7 @@ function view(l){
   const anim=n=>t('Animation '+n,'Chuyển động '+n);
   B['core-game-object-concept']=
     ent(t('Color list','Bảng màu'),
-      `<p>${t(`Rings, their arms and connectors, and ${P.el1}s share this list. ${P.el2} is always red.`,`Vòng, tay, đầu nối và ${P.el1} dùng chung bảng màu này. ${P.el2} luôn màu đỏ.`)}</p>
+      `<p>${t(`Rings, their arms and connectors share this list. ${P.el1} is always red. ${P.el2} is always black.`,`Vòng, tay và đầu nối dùng chung bảng màu này. ${P.el1} luôn màu đỏ. ${P.el2} luôn màu đen.`)}</p>
        <ol class="colors">${colors.map((c,i)=>`<li>${cap(i+1,i+1)}<span><span class="sr">${i+1}: </span>${c}</span></li>`).join('')}</ol>`)+
     ent(nm('Ring','Vòng'),params([
       [anim(1),t('Rotate: on tap, the ring turns smoothly with its arms. It shows a light inner line while it turns.','Xoay: khi chạm, vòng xoay mượt cùng các tay. Khi đang xoay, vòng hiện đường sáng bên trong.')],
@@ -1249,8 +1249,8 @@ function view(l){
 
   const an=t('Animation','Chuyển động'),look=t('Look','Hình ảnh');
   B['element-object-concept']=
-    ent(N.el1,params([[look,t('Glossy colored tube like a ring, straight or bent in 1 or more segments. No sleeves.','Ống màu bóng như vòng, thẳng hoặc gập khúc 1 hay nhiều đoạn. Không có khớp.')],[an,t('Shatters into shards of its color, like a ring.','Vỡ thành mảnh cùng màu, giống vòng.')]]))+
-    ent(N.el2,params([[look,t('Red glossy round pin with a white highlight, standing on its own.','Chốt tròn đỏ bóng, có điểm sáng trắng, đứng riêng.')],[an,t('Locks nothing: pops and shatters into red shards.','Hết khóa: bật lên rồi vỡ thành mảnh đỏ.')]]))+
+    ent(N.el1,params([[look,t('Red glossy round pin with a white highlight, standing on its own.','Chốt tròn đỏ bóng, có điểm sáng trắng, đứng riêng.')],[an,t('Locks nothing: pops and shatters into red shards.','Hết khóa: bật lên rồi vỡ thành mảnh đỏ.')]]))+
+    ent(N.el2,params([[look,t('Small black round bomb with a white highlight and a short lit fuse, sitting on the ring tube.','Quả bom tròn nhỏ màu đen, có điểm sáng trắng và ngòi ngắn đang cháy, nằm trên thân vòng.')],[an,t('Turns with its ring, fuse sparking. On touch: a yellow flash and puff, then both rings shatter.','Xoay theo vòng, ngòi tóe lửa. Khi chạm: lóe vàng, khói bung, rồi cả hai vòng vỡ.')]]))+
     ent(N.el3,params([[look,t('A normal ring with a grey padlock on its arc. The key is a small gold key stuck on another piece.','Vòng bình thường có ổ khóa xám trên cung. Chìa khóa là chìa vàng nhỏ gắn trên vật khác.')],[an,t('Tap while locked: the ring shakes. Key holder shatters: the key flies to the lock, the lock pops open and fades.','Chạm khi còn khóa: vòng rung. Vật giữ chìa vỡ: chìa bay tới ổ khóa, ổ khóa bật mở rồi mờ đi.')]]))+
     ent(N.el4,params([[look,t('A ring with a toothed outer rim in the same color.','Vòng có vành răng ở mép ngoài, cùng màu vòng.')],[an,t('Meshed gears turn together in opposite directions, teeth rolling against each other.','Các bánh răng ăn khớp cùng xoay ngược chiều, răng lăn vào nhau.')]]));
 
@@ -1275,8 +1275,8 @@ function view(l){
     ['Link Break','core',t('A connector comes off a ring','Đầu nối tuột khỏi vòng'),1],
     ['Ring Shatter','core',t('A piece shatters','Một vật vỡ vụn'),2],
     ['Praise','core',t('Great! / Excellent! / Amazing! / Incredible! pops','Lời khen Great! / Excellent! / Amazing! / Incredible! hiện lên'),0],
-    ['Bar Break','el',t(`A ${P.el1} shatters`,`${P.el1} vỡ`),2],
-    ['Pin Break','el',t(`A ${P.el2} that locks nothing shatters`,`${P.el2} hết khóa và tự vỡ`),2],
+    ['Pin Break','el',t(`A ${P.el1} that locks nothing shatters`,`${P.el1} hết khóa và tự vỡ`),2],
+    ['Bomb Explode','el',t(`A ${P.el2} touches another ring and explodes`,`${P.el2} chạm vòng khác và nổ`),3],
     ['Lock Shake','el',t(`The player taps a ${P.el3} that is still locked`,`Người chơi chạm ${P.el3} khi còn khóa`),1],
     ['Lock Open','el',t(`A key reaches its lock and the ${P.el3} opens`,`Chìa khóa tới ổ khóa và ${P.el3} mở`),2],
     ['Gear Turn','el',t(`Meshed ${P.el4}s turn together`,`Các ${P.el4} ăn khớp cùng xoay`),1],
@@ -1526,6 +1526,13 @@ function view(l){
   /* Add one day() block per day, newest first, with one ent per area changed */
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
+    day(t('Nov 26, 2026','26/11/2026'),
+      ent(t('Element set and unlock levels','Bộ yếu tố và màn mở khóa'),ul([
+        t(`Removed ${P.bar} as an element.`,`Bỏ yếu tố ${P.bar}.`),
+        t(`Added ${P.el2}: it sits on a ring, turns with it, and blows up its ring and the ring it touches. It clears knots no turn can free.`,`Thêm ${P.el2}: nằm trên vòng, xoay theo vòng, làm nổ vòng của nó và vòng nó chạm. Dùng để gỡ nút kẹt không xoay gỡ được.`),
+        t(`Unlock levels: ${P.el1} 7, ${P.el2} 12, ${P.el3} 17, ${P.el4} 22.`,`Màn mở khóa: ${P.el1} 7, ${P.el2} 12, ${P.el3} 17, ${P.el4} 22.`),
+        t(`New ${P.el2} demo, popup, look and SFX. Fail-safe: the stuck case is now a missed bomb.`,`Demo, popup, hình ảnh và SFX mới cho ${P.el2}. Chống kẹt: trường hợp kẹt giờ là bom chạm sai.`)
+      ])))+
     day(t('Nov 25, 2026','25/11/2026'),
       ent(t('Connector lock','Đầu nối khóa vòng'),ul([
         t(`A ring whose connector rests on another ring is locked and cannot turn.`,`Vòng có đầu nối đang tựa lên vòng khác thì bị khóa, không xoay được.`),
@@ -1536,8 +1543,8 @@ function view(l){
         t(`New prices: 1,000 Gold $1.99, 5,000 $4.99, 10,000 $8.99, 25,000 $19.99, 50,000 $34.99, 100,000 $69.99.`,`Giá mới: 1.000 Vàng $1.99, 5.000 $4.99, 10.000 $8.99, 25.000 $19.99, 50.000 $34.99, 100.000 $69.99.`)
       ]))+
       ent(t('Straight Bar and Pin','Thanh thẳng và Chốt'),ul([
-        t(`Link Bar is now ${P.el1}: same lock logic as a ring, straight or bent in 1 or more segments.`,`Link Bar đổi thành ${P.el1}: logic khóa giống vòng, thẳng hoặc gập khúc 1 hay nhiều đoạn.`),
-        t(`${P.el2} stands on its own, locks rings and bars like a ring, and shatters by itself once it locks nothing.`,`${P.el2} đứng riêng, khóa vòng và thanh như vòng, và tự vỡ khi không còn khóa gì.`),
+        t(`Link Bar is now ${P.bar}: same lock logic as a ring, straight or bent in 1 or more segments.`,`Link Bar đổi thành ${P.bar}: logic khóa giống vòng, thẳng hoặc gập khúc 1 hay nhiều đoạn.`),
+        t(`${P.el1} stands on its own, locks rings and bars like a ring, and shatters by itself once it locks nothing.`,`${P.el1} đứng riêng, khóa vòng và thanh như vòng, và tự vỡ khi không còn khóa gì.`),
         t(`New demos, popups, looks and SFX. Added a possible stuck case to Fail-safe.`,`Demo, popup, hình ảnh và SFX mới. Thêm trường hợp có thể kẹt vào Cơ chế chống kẹt.`)
       ]))+
       ent(t('New booster set','Bộ booster mới'),ul([
@@ -1545,7 +1552,7 @@ function view(l){
         t(`New set, weakest to strongest: ${P.bo1} (lights up rings that can turn), ${P.bo2} (cuts one connector), ${P.bo3} (removes one ring, hammer animation).`,`Bộ mới, từ yếu đến mạnh: ${P.bo1} (làm sáng vòng xoay được), ${P.bo2} (cắt một đầu nối), ${P.bo3} (xóa một vòng, hiệu ứng búa).`),
         t(`Unlock levels are TBD. Revive and Retry with Booster now use ${P.bo3}.`,`Màn mở khóa chưa chốt (TBD). Hồi sinh và Chơi lại kèm công cụ giờ dùng ${P.bo3}.`),
         t(`Elements (1.4): shorter bullets, one idea per line.`,`Yếu tố (1.4): viết gọn, mỗi dòng một ý.`),
-        t(`Element popups (2.3): rewritten as “do this, to get that” on 2 lines, like earlier GDDs. Added proposed text for ${P.el1} and ${P.el2}.`,`Popup yếu tố (2.3): viết lại theo dạng “làm gì, để được gì” trên 2 dòng, như các GDD trước. Thêm chữ đề xuất cho ${P.el1} và ${P.el2}.`),
+        t(`Element popups (2.3): rewritten as “do this, to get that” on 2 lines, like earlier GDDs. Added proposed text for ${P.bar} and ${P.el1}.`,`Popup yếu tố (2.3): viết lại theo dạng “làm gì, để được gì” trên 2 dòng, như các GDD trước. Thêm chữ đề xuất cho ${P.bar} và ${P.el1}.`),
         t(`Booster tutorial popups (2.4): “Highlight movable rings”, “Remove a connector”, “Remove a ring”.`,`Popup hướng dẫn booster (2.4): “Làm sáng các vòng xoay được”, “Xóa một đầu nối”, “Xóa một vòng”.`)
       ]))+
       ent(t('Main game mechanics','Cơ chế chính'),ul([
@@ -1561,7 +1568,7 @@ function view(l){
       ent(t('New elements','Yếu tố mới'),ul([
         t(`Added ${P.el3}: it cannot turn until the piece holding its key shatters. Added the stuck case to Fail-safe.`,`Thêm ${P.el3}: không xoay được cho tới khi vật giữ chìa khóa vỡ. Thêm trường hợp kẹt vào Cơ chế chống kẹt.`),
         t(`Added ${P.el4}: meshed gears turn together in opposite directions.`,`Thêm ${P.el4}: các bánh răng ăn khớp cùng xoay ngược chiều.`),
-        t(`Both unlock after ${P.el2} (level 10). Levels TBD: ${P.el3} first, ${P.el4} last.`,`Cả hai mở sau ${P.el2} (màn 10). Màn mở chưa chốt (TBD): ${P.el3} trước, ${P.el4} sau cùng.`)
+        t(`Both unlock after ${P.el1} (level 10). Levels TBD: ${P.el3} first, ${P.el4} last.`,`Cả hai mở sau ${P.el1} (màn 10). Màn mở chưa chốt (TBD): ${P.el3} trước, ${P.el4} sau cùng.`)
       ]))+
       ent(t('Saw booster','Booster Cưa'),ul([
         t(`Added Saw as the 3rd and strongest booster: it cuts a ring out and releases all its links. Unlock level TBD.`,`Thêm Cưa là booster thứ 3, mạnh nhất: cắt một vòng ra và nhả mọi liên kết của nó. Màn mở khóa chưa chốt (TBD).`),
