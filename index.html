@@ -846,7 +846,7 @@ function view(l){
 
   /* names reused across sections */
   const N={
-    el1:nm('Pin','Chốt'),el2:nm('Bomb','Bom'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
+    bar:nm('Straight Bar','Thanh thẳng'),el1:nm('Pin','Chốt'),el2:nm('Bomb','Bom'),el3:nm('Locked Ring','Vòng khóa'),el4:nm('Gear Ring','Bánh răng'),
     bo1:nm('Hint','Gợi ý'),bo2:nm('Saw','Cưa'),bo3:nm('Remove','Xóa vòng')
   };
   const P={ /* plain names for running text and tables */
@@ -906,13 +906,14 @@ function view(l){
       t(`A ring whose connector rests on another ring is locked: it cannot turn.`,
         `Vòng có đầu nối đang tựa lên vòng khác thì bị khóa: không xoay được.`),
       t(`While turning, the ring shows a light inner line (selected state).`,`Khi đang xoay, vòng hiện một đường sáng bên trong (trạng thái được chọn).`),
-      t(`Rings can overlap. No collision between pieces was seen.`,`Các vòng có thể chồng lên nhau. Không thấy va chạm giữa các vật.`)
+      t(`Ring tubes can overlap. Pins, connectors, ${P.bar}s and ${P.el2}s are solid: none passes through another. A ring stops turning when an arm or bomb it carries hits another part.`,`Thân vòng có thể chồng lên nhau. Chốt, đầu nối, ${P.bar} và ${P.el2} là vật cứng: không vật nào đi xuyên qua vật khác. Vòng dừng xoay khi tay hoặc bom nó mang chạm vào vật khác.`)
     ]),[seen],demo('rotate'))+
     ent(nm('Connector','Đầu nối'),ul([
       t(`A connector is the round tip at the end of a ring’s arm.`,`Đầu nối là đầu tròn ở cuối tay của vòng.`),
       t(`It rests on another ring. That is what keeps the two rings together.`,`Nó tựa lên một vòng khác. Nhờ vậy hai vòng dính với nhau.`),
       t(`The ring that owns the arm is locked while its connector rests on another ring. It cannot turn.`,`Vòng có tay bị khóa khi đầu nối còn tựa lên vòng khác. Vòng đó không xoay được.`),
       t(`To free it, turn the other ring until its gap reaches the connector. The connector slips out.`,`Muốn gỡ, xoay vòng kia tới khi chỗ hở chạm đầu nối. Đầu nối tuột ra.`),
+      t(`Once free, the arm turns with its ring. It cannot pass another connector, a pin, a bar or a bomb: the ring stops there, so the player may need to turn the other way or clear the part in the way first.`,`Khi đã tự do, tay xoay theo vòng của nó. Tay không đi xuyên qua đầu nối khác, chốt, thanh hay bom: vòng dừng tại đó, nên người chơi có thể phải xoay chiều ngược lại hoặc dọn vật cản trước.`),
       t(`Once all its connectors are out, the ring can turn again.`,`Khi mọi đầu nối đã tuột ra, vòng xoay lại được.`)
     ]))+
     ent(t('Clear rule','Quy tắc dọn'),ul([
@@ -1093,9 +1094,19 @@ function view(l){
   const fsLine=(en,vi)=>`<b>${t('Fail-safe','Chống kẹt')}:</b> ${t(en,vi)} ${fsSee}`;
   /* PER GAME: one ent per element: ent(N.key, ul([...rules]), unlock(level), demo('key')) */
   B['elements-mechanics']=
+    ent(N.bar,ul([
+      t(`A straight or bent metal bar. It does not turn.`,`Thanh kim loại thẳng hoặc gập khúc. Thanh không xoay.`),
+      t(`Its ends can rest on rings, like a connector. A ring's arm can also hook onto it.`,`Đầu thanh có thể tựa lên vòng, giống đầu nối. Tay của vòng cũng có thể móc lên thanh.`),
+      t(`Free an end: turn that ring until its gap passes the end.`,`Gỡ một đầu: xoay vòng đó tới khi chỗ hở đi qua đầu thanh.`),
+      t(`${P.el1}s usually hold it up in the air, so part of it may touch no ring.`,`${P.el1} thường giữ thanh trong không trung, nên có đoạn thanh không chạm vòng nào.`),
+      t(`Nothing rests on it or hooks it any more: the bar comes out, and the ${P.el1}s holding it go with it.`,`Không còn gì tựa hay móc vào thanh: thanh được rút ra, các ${P.el1} giữ nó biến mất theo.`),
+      t(`It is solid: free arms and bombs cannot pass it. A hook on a bar never slips out (a bar has no gap): only a ${P.el2} clears it.`,`Thanh là vật cứng: tay tự do và bom không đi xuyên qua được. Móc trên thanh không bao giờ tuột (thanh không có chỗ hở): chỉ ${P.el2} gỡ được.`)
+    ]),unlock(7))+
     ent(N.el1,ul([
-      t(`A pin that stands on its own. Not attached to any ring.`,`Chốt đứng riêng. Không gắn vào vòng nào.`),
-      t(`It sits on a ring and locks it. A piece it locks cannot clear.`,`Chốt nằm trên vòng và khóa vòng đó. Vật bị chốt khóa chưa được dọn.`),
+      t(`A pin that stands on its own. Not attached to any ring. Unlocks with the ${P.bar} and is used mostly to hold bars.`,`Chốt đứng riêng. Không gắn vào vòng nào. Mở cùng ${P.bar} và chủ yếu dùng để giữ thanh.`),
+      t(`On a bar: it only holds the bar in the air and goes away with it.`,`Trên thanh: chốt chỉ giữ thanh trong không trung và biến mất cùng thanh.`),
+      t(`On a ring: it locks the ring. A piece it locks cannot clear.`,`Trên vòng: chốt khóa vòng đó. Vật bị chốt khóa chưa được dọn.`),
+      t(`It is solid: free arms and bombs stop at it.`,`Chốt là vật cứng: tay tự do và bom dừng lại khi chạm chốt.`),
       t(`Free a ring: turn its gap past the pin.`,`Gỡ vòng: xoay chỗ hở qua chốt.`),
       t(`The pin does not turn.`,`Chốt không xoay.`),
       t(`Locks nothing: the pin shatters by itself.`,`Không còn khóa vật nào: chốt tự vỡ.`),
@@ -1103,6 +1114,7 @@ function view(l){
     ]),unlock(7),demo('pin'))+
     ent(N.el2,ul([
       t(`A bomb sits on a ring and turns with it.`,`Bom nằm trên một vòng và xoay theo vòng đó.`),
+      t(`It touches a ${P.bar}: it explodes and the bar comes out with its pins. It cannot pass a pin or a connector: its ring stops there.`,`Bom chạm ${P.bar}: bom nổ, thanh bị rút ra cùng các chốt. Bom không đi xuyên qua chốt hay đầu nối: vòng của nó dừng tại đó.`),
       t(`When the bomb touches another ring, it explodes: its own ring and the ring it touched both shatter, whatever links they still have.`,`Khi bom chạm vào vòng khác thì nổ: vòng mang bom và vòng bị chạm cùng vỡ, dù còn liên kết hay không.`),
       t(`A ring's gap does not count as a touch. Rings the bomb touches at the start do not set it off, only a new touch does.`,`Chỗ hở của vòng không tính là chạm. Vòng bom đang chạm lúc bắt đầu không làm nổ, chỉ lần chạm mới mới nổ.`),
       t(`If its ring shatters first, the bomb goes with it and does not explode.`,`Nếu vòng mang bom vỡ trước, bom vỡ theo và không nổ.`),
@@ -1112,7 +1124,7 @@ function view(l){
     ]),unlock(12),demo('bomb'))+
     ent(N.el3,ul([
       t(`A ring with a padlock. A tap only shakes it, it does not turn.`,`Vòng có ổ khóa. Chạm vào chỉ rung, không xoay.`),
-      t(`Its key sits on another ring.`,`Chìa khóa nằm trên một vòng khác.`),
+      t(`Its key sits on another ring or on a ${P.bar}.`,`Chìa khóa nằm trên một vòng khác hoặc trên ${P.bar}.`),
       t(`Key holder shatters: the key flies to the lock and opens it. It is a normal ring from then on.`,`Vật giữ chìa vỡ: chìa bay tới ổ khóa và mở khóa. Từ đó là vòng thường.`),
       t(`Still locked but no links left: it clears as usual.`,`Còn khóa nhưng hết liên kết: vẫn được dọn như thường.`),
       t(`Boosters: ${P.bo1} does not light it while locked. ${P.bo3} on the key holder releases the key. ${P.bo3} on the locked ring clears it.`,`Booster: ${P.bo1} không làm sáng vòng còn khóa. ${P.bo3} lên vật giữ chìa thì nhả chìa. ${P.bo3} lên vòng khóa thì dọn luôn vòng.`),
@@ -1128,6 +1140,7 @@ function view(l){
     ]),unlock(22),demo('gearRing'))+
     ent(nm('Fail-safe','Cơ chế chống kẹt'),ul([
       t(`No element counts down on player actions. Rings can be turned any number of times. The stuck cases are below.`,`Không yếu tố nào đếm ngược theo thao tác. Vòng xoay được không giới hạn. Các trường hợp kẹt ở bên dưới.`),
+      t(`A free arm or bomb that bumps a part never makes a level stuck: the player turns the other way or clears the part in the way.`,`Tay tự do hay bom va vào vật khác không làm màn bị kẹt: người chơi xoay chiều ngược lại hoặc dọn vật cản trước.`),
       t(`Stuck: a knot is meant for a ${P.el2}, but the bomb hit another ring or its ring shattered first. No turn frees the knot. The player uses ${P.bo2} or ${P.bo3}, or restarts. Auto restart offer: TBD.`,`Kẹt: nút kẹt dành cho ${P.el2}, nhưng bom chạm vòng khác hoặc vòng mang bom vỡ trước. Không lần xoay nào gỡ được nút. Người chơi dùng ${P.bo2} hoặc ${P.bo3}, hoặc chơi lại. Tự gợi ý chơi lại: chưa chốt (TBD).`),
       t(`Stuck: the piece holding the key can only be freed by turning the ${P.el3}. Level design must avoid this. If it still happens, the lock opens by itself.`,`Kẹt: vật giữ chìa khóa chỉ gỡ được bằng cách xoay ${P.el3}. Thiết kế màn phải tránh trường hợp này. Nếu vẫn xảy ra, ổ khóa tự mở.`),
       t(`If a move limit is added later (see the lose condition in 1.1), define the stuck cases here. TBD.`,`Nếu sau này thêm giới hạn move (xem điều kiện thua ở 1.1), cần định nghĩa trường hợp kẹt ở đây. Chưa chốt (TBD).`)
@@ -1198,7 +1211,8 @@ function view(l){
   B['element-tutorial']=table(t('Element tutorial','Hướng dẫn yếu tố đặc biệt'),
     [t('Element','Yếu tố'),t('Popup text','Nội dung popup'),t('Unlocks at level','Mở ở màn')],
     [
-      [N.el1,popup('Free every ring from the pin<br>to break it.','Gỡ mọi vòng khỏi chốt<br>để phá chốt.'),lvl(7)],
+      [N.bar,popup('Free every end of the bar<br>to pull it out.','Gỡ mọi đầu thanh<br>để rút thanh ra.'),lvl(7)],
+      [N.el1,popup('Pins hold the bar up.<br>They go with the bar.','Chốt giữ thanh trong không trung.<br>Chốt biến mất cùng thanh.'),lvl(7)],
       [N.el2,popup('Turn the bomb into another ring<br>to blow both up.','Xoay bom chạm vào vòng khác<br>để phá cả hai.'),lvl(12)],
       [N.el3,popup('Break the piece with the key<br>to unlock the ring.','Phá vật giữ chìa khóa<br>để mở vòng khóa.'),lvl(17)],
       [N.el4,popup('Turn one gear,<br>the other turns the opposite way.','Xoay một bánh răng,<br>bánh kia xoay ngược chiều.'),lvl(22)]
@@ -1219,7 +1233,7 @@ function view(l){
   /* PER GAME: every element and booster with its unlock level, sorted by level */
   const stops=[
     [1,t('First tutorial','Hướng dẫn đầu tiên'),'ftue','ftue-steps','FTUE'],
-    [7,P.el1,'elem','elements-mechanics'],[12,P.el2,'elem','elements-mechanics'],
+    [7,`${P.bar} + ${P.el1}`,'elem','elements-mechanics'],[12,P.el2,'elem','elements-mechanics'],
     [17,P.el3,'elem','elements-mechanics'],[22,P.el4,'elem','elements-mechanics'],
     ['TBD',P.bo1,'boost','booster-mechanics'],['TBD',P.bo2,'boost','booster-mechanics'],
     ['TBD',P.bo3,'boost','booster-mechanics']
@@ -1249,6 +1263,7 @@ function view(l){
 
   const an=t('Animation','Chuyển động'),look=t('Look','Hình ảnh');
   B['element-object-concept']=
+    ent(N.bar,params([[look,t('A grey metal bar, straight or bent, with rounded ends.','Thanh kim loại xám, thẳng hoặc gập khúc, đầu bo tròn.')],[an,t('Comes out: slides away and fades, its pins pop with it.','Khi rút ra: trượt đi và mờ dần, các chốt bật ra theo.')]]))+
     ent(N.el1,params([[look,t('Red glossy round pin with a white highlight, standing on its own.','Chốt tròn đỏ bóng, có điểm sáng trắng, đứng riêng.')],[an,t('Locks nothing: pops and shatters into red shards.','Hết khóa: bật lên rồi vỡ thành mảnh đỏ.')]]))+
     ent(N.el2,params([[look,t('Small black round bomb with a white highlight and a short lit fuse, sitting on the ring tube.','Quả bom tròn nhỏ màu đen, có điểm sáng trắng và ngòi ngắn đang cháy, nằm trên thân vòng.')],[an,t('Turns with its ring, fuse sparking. On touch: a yellow flash and puff, then both rings shatter.','Xoay theo vòng, ngòi tóe lửa. Khi chạm: lóe vàng, khói bung, rồi cả hai vòng vỡ.')]]))+
     ent(N.el3,params([[look,t('A normal ring with a grey padlock on its arc. The key is a small gold key stuck on another piece.','Vòng bình thường có ổ khóa xám trên cung. Chìa khóa là chìa vàng nhỏ gắn trên vật khác.')],[an,t('Tap while locked: the ring shakes. Key holder shatters: the key flies to the lock, the lock pops open and fades.','Chạm khi còn khóa: vòng rung. Vật giữ chìa vỡ: chìa bay tới ổ khóa, ổ khóa bật mở rồi mờ đi.')]]))+
@@ -1527,6 +1542,11 @@ function view(l){
   const day=(title,body)=>`<div class="sub"><h3><span>${title}</span></h3>${body}</div>`;
   B['change-note']=`<p class="sec-intro">${t('Changes made to this GDD, newest day first.','Các thay đổi của tài liệu này, ngày mới nhất ở trên cùng.')}</p>`+
     day(t('Nov 26, 2026','26/11/2026'),
+      ent(t('Solid parts, Straight Bar and Pin','Vật cứng, Thanh thẳng và Chốt'),ul([
+        t(`Pins, connectors, bars and bombs are now solid: none passes through another. A ring stops when an arm or bomb it carries hits a part. Ring tubes still overlap.`,`Chốt, đầu nối, thanh và bom giờ là vật cứng: không vật nào đi xuyên qua vật khác. Vòng dừng khi tay hoặc bom nó mang chạm vật khác. Thân vòng vẫn chồng lên nhau được.`),
+        t(`${P.bar} is back as an element. It unlocks with ${P.el1} at level 7, and pins are used mostly to hold bars.`,`${P.bar} quay lại làm yếu tố. Thanh mở cùng ${P.el1} ở màn 7, và chốt chủ yếu dùng để giữ thanh.`),
+        t(`A bar comes out when nothing rests on it or hooks it; its pins go with it. A ${P.el2} that touches a bar blows it out. A ${P.el3}'s key can sit on a bar.`,`Thanh được rút ra khi không còn gì tựa hay móc vào; các chốt biến mất theo. ${P.el2} chạm thanh thì làm nổ thanh. Chìa của ${P.el3} có thể nằm trên thanh.`)
+      ]))+
       ent(t('Element set and unlock levels','Bộ yếu tố và màn mở khóa'),ul([
         t(`Removed ${P.bar} as an element.`,`Bỏ yếu tố ${P.bar}.`),
         t(`Added ${P.el2}: it sits on a ring, turns with it, and blows up its ring and the ring it touches. It clears knots no turn can free.`,`Thêm ${P.el2}: nằm trên vòng, xoay theo vòng, làm nổ vòng của nó và vòng nó chạm. Dùng để gỡ nút kẹt không xoay gỡ được.`),
